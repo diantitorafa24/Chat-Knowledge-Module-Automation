@@ -41,6 +41,12 @@
         <div class="menu-title">System</div>
         <a href="#" class="sub">Users</a>
         <a href="#" class="sub">Settings</a>
+        <div class="menu-title">Akun</div>
+        <div class="px-3 py-2 text-white-50 small">{{ auth()->user()->name }}</div>
+        <form method="POST" action="{{ route('logout') }}" class="px-3 pb-3">
+            @csrf
+            <button type="submit" class="btn btn-outline-light btn-sm w-100">Logout</button>
+        </form>
     </nav>
 
     <main class="flex-grow-1 p-4">
