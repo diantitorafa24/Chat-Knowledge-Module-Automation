@@ -1,0 +1,6 @@
+.env
+*.env
+kredensial*.txt
+qdrant/storage/
+*.log
+.vscode/
