@@ -5,3 +5,4 @@ qdrant/storage/
 *.log
 .vscode/
 qdrant/bin/
+qdrant/.qdrant-initialized
