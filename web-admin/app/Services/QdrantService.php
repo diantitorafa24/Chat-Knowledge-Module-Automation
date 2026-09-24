@@ -83,6 +83,13 @@ class QdrantService
             'filter' => ['must' => [['key' => 'module_id', 'match' => ['value' => $moduleId]]]],
         ]);
     }
+    public function setActiveForModule(int $moduleId, bool $active): void
+    {
+        $this->request('POST', '/collections/' . $this->collection() . '/points/payload?wait=true', [
+            'payload' => ['is_active' => $active],
+            'filter' => ['must' => [['key' => 'module_id', 'match' => ['value' => $moduleId]]]],
+        ]);
+    }
     public function setActiveForDocument(int $documentId, bool $active): void
     {
         $this->request('POST', '/collections/' . $this->collection() . '/points/payload?wait=true', [

@@ -6,6 +6,7 @@ use App\Http\Controllers\ChunkController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\DocumentController;
 use App\Http\Controllers\ModuleController;
+use App\Http\Controllers\ModuleVersionController;
 use Illuminate\Support\Facades\Route;
 
 Route::middleware('guest')->group(function () {
@@ -19,6 +20,8 @@ Route::middleware('auth')->group(function () {
     Route::resource('categories', CategoryController::class)->except(['create', 'show']);
     Route::resource('modules', ModuleController::class);
     Route::post('/modules/{module}/documents', [DocumentController::class, 'store'])->name('modules.documents.store');
+    Route::post('/modules/{module}/versions/{version}/activate', [ModuleVersionController::class, 'activate'])->name('versions.activate');
+    Route::post('/modules/{module}/versions/{version}/deactivate', [ModuleVersionController::class, 'deactivate'])->name('versions.deactivate');
     Route::get('/documents', [DocumentController::class, 'index'])->name('documents.index');
     Route::post('/documents/{document}/reprocess', [DocumentController::class, 'reprocess'])->name('documents.reprocess');
     Route::get('/documents/{document}/download', [DocumentController::class, 'download'])->name('documents.download');

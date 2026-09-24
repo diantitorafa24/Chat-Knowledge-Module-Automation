@@ -4,7 +4,7 @@
 @section('heading', $module->name)
 
 @section('content')
-<div class="card shadow-sm mb-4" style="max-width: 900px;">
+<div class="card shadow-sm mb-4" style="max-width: 1000px;">
     <div class="card-body">
         <dl class="row mb-0">
             <dt class="col-sm-3">Kode</dt>
@@ -29,9 +29,9 @@
     </div>
 </div>
 
-<div class="card shadow-sm mb-4" style="max-width: 900px;">
+<div class="card shadow-sm mb-4" style="max-width: 1000px;">
     <div class="card-body">
-        <h6 class="mb-3">Dokumen</h6>
+        <h6 class="mb-3">Versi dan Dokumen</h6>
         <div class="table-responsive">
             <table class="table align-middle mb-0">
                 <thead class="table-light">
@@ -39,8 +39,10 @@
                         <th>Versi</th>
                         <th>File</th>
                         <th>Ukuran</th>
-                        <th>Status</th>
+                        <th>Status dokumen</th>
+                        <th>Dipakai bot</th>
                         <th>Diunggah</th>
+                        <th class="text-end">Aksi</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -49,11 +51,39 @@
                         <td class="fw-semibold">{{ $version->version }}</td>
                         <td>{{ $version->document->original_filename ?? '-' }}</td>
                         <td>{{ $version->document ? number_format($version->document->file_size / 1024, 1) . ' KB' : '-' }}</td>
-                        <td><span class="badge text-bg-secondary">{{ $version->document->processing_status ?? '-' }}</span></td>
+                        <td>
+                            @if ($version->document)
+                                @include('documents._status', ['status' => $version->document->processing_status])
+                            @else
+                                -
+                            @endif
+                        </td>
+                        <td>
+                            @if ($version->status === 'active')
+                                <span class="badge text-bg-success">AKTIF</span>
+                            @else
+                                <span class="text-muted">-</span>
+                            @endif
+                        </td>
                         <td class="text-muted">{{ $version->created_at?->format('d M Y H:i') }}</td>
+                        <td class="text-end">
+                            @if ($version->status === 'active')
+                                <form method="POST" action="{{ route('versions.deactivate', [$module, $version]) }}" class="d-inline" onsubmit="return confirm('Nonaktifkan versi ini? Bot tidak akan memakai modul ini lagi.')">
+                                    @csrf
+                                    <button type="submit" class="btn btn-sm btn-outline-secondary">Nonaktifkan</button>
+                                </form>
+                            @elseif ($version->document && $version->document->processing_status === 'indexed')
+                                <form method="POST" action="{{ route('versions.activate', [$module, $version]) }}" class="d-inline" onsubmit="return confirm('Aktifkan versi ini? Versi aktif sebelumnya akan dinonaktifkan.')">
+                                    @csrf
+                                    <button type="submit" class="btn btn-sm btn-success">Aktifkan</button>
+                                </form>
+                            @else
+                                <span class="text-muted small">menunggu proses</span>
+                            @endif
+                        </td>
                     </tr>
                 @empty
-                    <tr><td colspan="5" class="text-center text-muted py-3">Belum ada dokumen.</td></tr>
+                    <tr><td colspan="7" class="text-center text-muted py-3">Belum ada dokumen.</td></tr>
                 @endforelse
                 </tbody>
             </table>
@@ -61,7 +91,7 @@
     </div>
 </div>
 
-<div class="card shadow-sm" style="max-width: 900px;">
+<div class="card shadow-sm" style="max-width: 1000px;">
     <div class="card-body">
         <h6 class="mb-3">Upload Versi Baru</h6>
         <form method="POST" action="{{ route('modules.documents.store', $module) }}" enctype="multipart/form-data" class="row g-2">
