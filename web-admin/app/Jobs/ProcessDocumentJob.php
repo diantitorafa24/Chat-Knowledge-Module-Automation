@@ -4,6 +4,7 @@ namespace App\Jobs;
 
 use App\Models\Document;
 use App\Models\Module;
+use App\Services\ChunkingService;
 use App\Services\DocumentParserService;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Queue\Queueable;
@@ -24,7 +25,7 @@ class ProcessDocumentJob implements ShouldQueue
     {
     }
 
-    public function handle(DocumentParserService $parser): void
+    public function handle(DocumentParserService $parser, ChunkingService $chunker): void
     {
         $document = Document::find($this->documentId);
 
@@ -53,6 +54,10 @@ class ProcessDocumentJob implements ShouldQueue
             );
 
             $document->update(['processing_status' => 'extracted', 'progress' => 30]);
+
+            $document->update(['processing_status' => 'chunking', 'progress' => 40]);
+            $chunker->chunk($document, $result['blocks']);
+            $document->update(['processing_status' => 'chunked', 'progress' => 60]);
         } catch (Throwable $e) {
             $this->markFailed($document, $e);
         }
