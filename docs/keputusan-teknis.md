@@ -2,7 +2,7 @@
 
 - Web Admin: Laravel + Blade + Bootstrap
 - Database: MySQL (XAMPP)
-- Proses DOCX: Laravel, library phpoffice/phpword
+- Proses DOCX: Laravel, baca langsung XML DOCX (ZipArchive + DOM), tanpa library tambahan
 - Queue: Laravel Queue (driver database)
 - Vector DB: Qdrant (binary Windows, tanpa Docker)
 - Embedding: (isi setelah dipilih)
