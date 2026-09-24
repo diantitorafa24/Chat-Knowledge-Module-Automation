@@ -32,6 +32,10 @@
                     <td>@include('documents._status', ['status' => $document->processing_status])</td>
                     <td class="text-muted">{{ $document->created_at?->format('d M Y H:i') }}</td>
                     <td class="text-end">
+                        <form method="POST" action="{{ route('documents.reprocess', $document) }}" class="d-inline" onsubmit="return confirm('Proses ulang dokumen ini?')">
+                            @csrf
+                            <button type="submit" class="btn btn-sm btn-outline-warning">Proses Ulang</button>
+                        </form>
                         <a href="{{ route('documents.download', $document) }}" class="btn btn-sm btn-outline-primary">Download</a>
                         <form method="POST" action="{{ route('documents.destroy', $document) }}" class="d-inline" onsubmit="return confirm('Hapus dokumen ini beserta filenya?')">
                             @csrf

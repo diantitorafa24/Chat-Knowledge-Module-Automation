@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use App\Jobs\ProcessDocumentJob;
 use App\Models\Document;
 use App\Models\Module;
 use App\Models\ModuleVersion;
@@ -72,7 +73,7 @@ class DocumentUploadService
         $path = $file->storeAs('modules/' . $module->id, $storedName);
 
         try {
-            return DB::transaction(function () use ($module, $version, $storedName, $original, $path, $size, $mime) {
+            $document = DB::transaction(function () use ($module, $version, $storedName, $original, $path, $size, $mime) {
                 $document = Document::create([
                     'module_id' => $module->id,
                     'filename' => $storedName,
@@ -98,5 +99,9 @@ class DocumentUploadService
 
             throw $e;
         }
+
+        ProcessDocumentJob::dispatch($document->id)->afterCommit();
+
+        return $document;
     }
 }

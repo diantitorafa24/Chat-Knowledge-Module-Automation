@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Jobs\ProcessDocumentJob;
 use App\Models\Document;
 use App\Models\Module;
 use App\Models\ModuleVersion;
@@ -51,7 +52,19 @@ class DocumentController extends Controller
         $this->uploads->upload($module, $request->file('file'), $data['version']);
 
         return redirect()->route('modules.show', $module)
-            ->with('success', 'Dokumen versi ' . $data['version'] . ' berhasil diunggah.');
+            ->with('success', 'Dokumen versi ' . $data['version'] . ' berhasil diunggah dan masuk antrean.');
+    }
+
+    public function reprocess(Document $document)
+    {
+        if ($document->processing_status === 'active') {
+            return back()->with('error', 'Dokumen aktif tidak bisa diproses ulang. Nonaktifkan dulu.');
+        }
+
+        $document->update(['processing_status' => 'uploaded', 'progress' => 0, 'processing_error' => null]);
+        ProcessDocumentJob::dispatch($document->id);
+
+        return back()->with('success', 'Dokumen dimasukkan ke antrean pemrosesan.');
     }
 
     public function download(Document $document)
@@ -68,6 +81,7 @@ class DocumentController extends Controller
         }
 
         Storage::delete($document->file_path);
+        Storage::delete(ProcessDocumentJob::extractedPath($document));
         ModuleVersion::where('document_id', $document->id)->delete();
         $document->delete();
 
