@@ -4,3 +4,4 @@ kredensial*.txt
 qdrant/storage/
 *.log
 .vscode/
+qdrant/bin/
