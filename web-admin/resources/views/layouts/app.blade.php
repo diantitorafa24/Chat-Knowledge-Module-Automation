@@ -29,8 +29,8 @@
         <a href="#" class="sub">Versions</a>
 
         <div class="menu-title">Knowledge</div>
-        <a href="#" class="sub">Documents</a>
-        <a href="#" class="sub">Processing</a>
+        <a href="{{ route('documents.index') }}" class="sub {{ request()->routeIs('documents.*') ? 'active' : '' }}">Documents</a>
+        <a href="{{ route('processing.index') }}" class="sub {{ request()->routeIs('processing.*') ? 'active' : '' }}">Processing</a>
         <a href="#" class="sub">Chunks</a>
 
         <div class="menu-title">Monitoring</div>

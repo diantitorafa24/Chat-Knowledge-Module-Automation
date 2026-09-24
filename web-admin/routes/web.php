@@ -18,5 +18,9 @@ Route::middleware('auth')->group(function () {
     Route::resource('categories', CategoryController::class)->except(['create', 'show']);
     Route::resource('modules', ModuleController::class);
     Route::post('/modules/{module}/documents', [DocumentController::class, 'store'])->name('modules.documents.store');
+    Route::get('/documents', [DocumentController::class, 'index'])->name('documents.index');
+    Route::get('/documents/{document}/download', [DocumentController::class, 'download'])->name('documents.download');
+    Route::delete('/documents/{document}', [DocumentController::class, 'destroy'])->name('documents.destroy');
+    Route::get('/processing', [DocumentController::class, 'processing'])->name('processing.index');
     Route::post('/logout', [LoginController::class, 'logout'])->name('logout');
 });
