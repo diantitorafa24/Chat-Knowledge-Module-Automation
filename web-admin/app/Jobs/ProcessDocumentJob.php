@@ -4,6 +4,7 @@ namespace App\Jobs;
 
 use App\Models\Document;
 use App\Models\Module;
+use App\Services\ChunkIndexer;
 use App\Services\ChunkingService;
 use App\Services\DocumentParserService;
 use Illuminate\Contracts\Queue\ShouldQueue;
@@ -19,13 +20,13 @@ class ProcessDocumentJob implements ShouldQueue
 
     public int $tries = 1;
 
-    public int $timeout = 300;
+    public int $timeout = 1200;
 
     public function __construct(public int $documentId)
     {
     }
 
-    public function handle(DocumentParserService $parser, ChunkingService $chunker): void
+    public function handle(DocumentParserService $parser, ChunkingService $chunker, ChunkIndexer $indexer): void
     {
         $document = Document::find($this->documentId);
 
@@ -58,6 +59,14 @@ class ProcessDocumentJob implements ShouldQueue
             $document->update(['processing_status' => 'chunking', 'progress' => 40]);
             $chunker->chunk($document, $result['blocks']);
             $document->update(['processing_status' => 'chunked', 'progress' => 60]);
+
+            $document->update(['processing_status' => 'embedding', 'progress' => 65]);
+            $indexer->index($document, function (int $done, int $total) use ($document) {
+                $document->update(['progress' => 65 + (int) floor($done / $total * 25)]);
+            });
+            $document->update(['processing_status' => 'indexed', 'progress' => 90]);
+
+            $this->setModuleStatus($document->module_id, 'inactive');
         } catch (Throwable $e) {
             $this->markFailed($document, $e);
         }

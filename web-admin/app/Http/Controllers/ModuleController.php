@@ -93,6 +93,11 @@ class ModuleController extends Controller
 
     public function destroy(Module $module)
     {
+        try {
+            app(\App\Services\QdrantService::class)->deleteByModule($module->id);
+        } catch (\Throwable $e) {
+            \Illuminate\Support\Facades\Log::warning('Gagal menghapus titik Qdrant', ['module_id' => $module->id, 'error' => $e->getMessage()]);
+        }
         Storage::deleteDirectory('modules/' . $module->id);
         $module->delete();
 

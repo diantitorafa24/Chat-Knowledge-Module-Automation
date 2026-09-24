@@ -77,6 +77,12 @@ class QdrantService
         ]);
     }
 
+    public function deleteByModule(int $moduleId): void
+    {
+        $this->request('POST', '/collections/' . $this->collection() . '/points/delete?wait=true', [
+            'filter' => ['must' => [['key' => 'module_id', 'match' => ['value' => $moduleId]]]],
+        ]);
+    }
     public function setActiveForDocument(int $documentId, bool $active): void
     {
         $this->request('POST', '/collections/' . $this->collection() . '/points/payload?wait=true', [

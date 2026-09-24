@@ -81,6 +81,11 @@ class DocumentController extends Controller
         }
 
         Storage::delete($document->file_path);
+        try {
+            app(\App\Services\QdrantService::class)->deleteByDocument($document->id);
+        } catch (\Throwable $e) {
+            \Illuminate\Support\Facades\Log::warning('Gagal menghapus titik Qdrant', ['document_id' => $document->id, 'error' => $e->getMessage()]);
+        }
         Storage::delete(ProcessDocumentJob::extractedPath($document));
         ModuleVersion::where('document_id', $document->id)->delete();
         $document->delete();
