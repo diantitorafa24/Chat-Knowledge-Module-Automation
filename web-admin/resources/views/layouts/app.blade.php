@@ -25,7 +25,7 @@
         <div class="menu-title">Modules</div>
         <a href="#" class="sub">All Modules</a>
         <a href="#" class="sub">Upload Module</a>
-        <a href="#" class="sub">Categories</a>
+        <a href="{{ route('categories.index') }}" class="sub {{ request()->routeIs('categories.*') ? 'active' : '' }}">Categories</a>
         <a href="#" class="sub">Versions</a>
 
         <div class="menu-title">Knowledge</div>
@@ -51,6 +51,12 @@
 
     <main class="flex-grow-1 p-4">
         <h4 class="mb-4">@yield('heading', 'Dashboard')</h4>
+        @if (session('success'))
+            <div class="alert alert-success">{{ session('success') }}</div>
+        @endif
+        @if (session('error'))
+            <div class="alert alert-danger">{{ session('error') }}</div>
+        @endif
         @yield('content')
     </main>
 </div>
