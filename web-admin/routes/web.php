@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\CategoryController;
+use App\Http\Controllers\ChunkController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\DocumentController;
 use App\Http\Controllers\ModuleController;
@@ -23,5 +24,6 @@ Route::middleware('auth')->group(function () {
     Route::get('/documents/{document}/download', [DocumentController::class, 'download'])->name('documents.download');
     Route::delete('/documents/{document}', [DocumentController::class, 'destroy'])->name('documents.destroy');
     Route::get('/processing', [DocumentController::class, 'processing'])->name('processing.index');
+    Route::get('/chunks', [ChunkController::class, 'index'])->name('chunks.index');
     Route::post('/logout', [LoginController::class, 'logout'])->name('logout');
 });

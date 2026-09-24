@@ -31,7 +31,7 @@
         <div class="menu-title">Knowledge</div>
         <a href="{{ route('documents.index') }}" class="sub {{ request()->routeIs('documents.*') ? 'active' : '' }}">Documents</a>
         <a href="{{ route('processing.index') }}" class="sub {{ request()->routeIs('processing.*') ? 'active' : '' }}">Processing</a>
-        <a href="#" class="sub">Chunks</a>
+        <a href="{{ route('chunks.index') }}" class="sub {{ request()->routeIs('chunks.*') ? 'active' : '' }}">Chunks</a>
 
         <div class="menu-title">Monitoring</div>
         <a href="#" class="sub">Chat Logs</a>
