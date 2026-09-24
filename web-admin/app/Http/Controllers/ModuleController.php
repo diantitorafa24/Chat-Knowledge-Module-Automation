@@ -4,11 +4,18 @@ namespace App\Http\Controllers;
 
 use App\Models\Category;
 use App\Models\Module;
+use App\Services\DocumentUploadService;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Validation\Rule;
 
 class ModuleController extends Controller
 {
+    public function __construct(private DocumentUploadService $uploads)
+    {
+    }
+
     public function index(Request $request)
     {
         $categories = Category::orderBy('name')->get();
@@ -34,22 +41,34 @@ class ModuleController extends Controller
             'name' => ['required', 'string', 'max:150'],
             'category_id' => ['nullable', Rule::exists('categories', 'id')->where('status', 'active')],
             'description' => ['nullable', 'string', 'max:1000'],
-        ]);
+            'file' => DocumentUploadService::fileRules(),
+        ], DocumentUploadService::messages());
 
-        $nextId = (Module::max('id') ?? 0) + 1;
-        $data['code'] = 'MOD-' . str_pad($nextId, 3, '0', STR_PAD_LEFT);
-        $data['status'] = 'inactive';
+        $module = DB::transaction(function () use ($data, $request) {
+            $module = Module::create([
+                'name' => $data['name'],
+                'category_id' => $data['category_id'] ?? null,
+                'description' => $data['description'] ?? null,
+                'code' => 'MOD-' . str_pad((Module::max('id') ?? 0) + 1, 3, '0', STR_PAD_LEFT),
+                'status' => 'inactive',
+            ]);
 
-        $module = Module::create($data);
+            $this->uploads->upload($module, $request->file('file'), 'v1.0');
 
-        return redirect()->route('modules.show', $module)->with('success', 'Modul berhasil dibuat.');
+            return $module;
+        });
+
+        return redirect()->route('modules.show', $module)
+            ->with('success', 'Modul dan dokumen v1.0 berhasil diunggah.');
     }
 
     public function show(Module $module)
     {
         $module->load('category');
+        $versions = $module->versions()->with('document')->orderByDesc('id')->get();
+        $suggestedVersion = $this->uploads->suggestVersion($module);
 
-        return view('modules.show', compact('module'));
+        return view('modules.show', compact('module', 'versions', 'suggestedVersion'));
     }
 
     public function edit(Module $module)
@@ -74,6 +93,7 @@ class ModuleController extends Controller
 
     public function destroy(Module $module)
     {
+        Storage::deleteDirectory('modules/' . $module->id);
         $module->delete();
 
         return redirect()->route('modules.index')->with('success', 'Modul berhasil dihapus.');
