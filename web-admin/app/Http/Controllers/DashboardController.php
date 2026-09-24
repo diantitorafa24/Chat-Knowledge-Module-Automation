@@ -2,17 +2,21 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\ChatLog;
+use App\Models\Document;
+use App\Models\DocumentChunk;
+use App\Models\Module;
+
 class DashboardController extends Controller
 {
     public function index()
     {
-        // Angka sementara. Nanti diisi dari database setelah tabelnya ada (Phase 3 dst).
         $stats = [
-            'Total Module' => 0,
-            'Total Documents' => 0,
-            'Total Chunks' => 0,
-            'Pertanyaan Hari Ini' => 0,
-            'Module Processing' => 0,
+            'Total Module' => Module::count(),
+            'Total Documents' => Document::count(),
+            'Total Chunks' => DocumentChunk::count(),
+            'Pertanyaan Hari Ini' => ChatLog::whereDate('created_at', today())->count(),
+            'Module Processing' => Module::where('status', 'processing')->count(),
         ];
 
         return view('dashboard.index', compact('stats'));

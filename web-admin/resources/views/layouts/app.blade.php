@@ -23,8 +23,8 @@
         <a href="{{ route('dashboard') }}" class="{{ request()->routeIs('dashboard') ? 'active' : '' }}">Dashboard</a>
 
         <div class="menu-title">Modules</div>
-        <a href="#" class="sub">All Modules</a>
-        <a href="#" class="sub">Upload Module</a>
+        <a href="{{ route('modules.index') }}" class="sub {{ request()->routeIs('modules.index', 'modules.show', 'modules.edit') ? 'active' : '' }}">All Modules</a>
+        <a href="{{ route('modules.create') }}" class="sub {{ request()->routeIs('modules.create') ? 'active' : '' }}">Upload Module</a>
         <a href="{{ route('categories.index') }}" class="sub {{ request()->routeIs('categories.*') ? 'active' : '' }}">Categories</a>
         <a href="#" class="sub">Versions</a>
 
