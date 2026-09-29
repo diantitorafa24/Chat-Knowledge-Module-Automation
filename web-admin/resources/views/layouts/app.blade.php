@@ -26,7 +26,7 @@
         <a href="{{ route('modules.index') }}" class="sub {{ request()->routeIs('modules.index', 'modules.show', 'modules.edit') ? 'active' : '' }}">All Modules</a>
         <a href="{{ route('modules.create') }}" class="sub {{ request()->routeIs('modules.create') ? 'active' : '' }}">Upload Module</a>
         <a href="{{ route('categories.index') }}" class="sub {{ request()->routeIs('categories.*') ? 'active' : '' }}">Categories</a>
-        <a href="#" class="sub">Versions</a>
+        <a href="{{ route('versions.index') }}" class="sub {{ request()->routeIs('versions.*') ? 'active' : '' }}">Versions</a>
 
         <div class="menu-title">Knowledge</div>
         <a href="{{ route('documents.index') }}" class="sub {{ request()->routeIs('documents.*') ? 'active' : '' }}">Documents</a>
