@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\CategoryController;
+use App\Http\Controllers\ChatLogController;
 use App\Http\Controllers\ChunkController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\DocumentController;
@@ -30,5 +31,7 @@ Route::middleware('auth')->group(function () {
     Route::delete('/documents/{document}', [DocumentController::class, 'destroy'])->name('documents.destroy');
     Route::get('/processing', [DocumentController::class, 'processing'])->name('processing.index');
     Route::get('/chunks', [ChunkController::class, 'index'])->name('chunks.index');
+    Route::get('/chat-logs', [ChatLogController::class, 'index'])->name('chat-logs.index');
+    Route::get('/unanswered-questions', [ChatLogController::class, 'unanswered'])->name('chat-logs.unanswered');
     Route::post('/logout', [LoginController::class, 'logout'])->name('logout');
 });

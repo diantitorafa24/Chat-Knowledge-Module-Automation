@@ -34,8 +34,8 @@
         <a href="{{ route('chunks.index') }}" class="sub {{ request()->routeIs('chunks.*') ? 'active' : '' }}">Chunks</a>
 
         <div class="menu-title">Monitoring</div>
-        <a href="#" class="sub">Chat Logs</a>
-        <a href="#" class="sub">Unanswered Questions</a>
+        <a href="{{ route('chat-logs.index') }}" class="sub {{ request()->routeIs('chat-logs.index') ? 'active' : '' }}">Chat Logs</a>
+        <a href="{{ route('chat-logs.unanswered') }}" class="sub {{ request()->routeIs('chat-logs.unanswered') ? 'active' : '' }}">Unanswered Questions</a>
         <a href="#" class="sub">Feedback</a>
 
         <div class="menu-title">System</div>
