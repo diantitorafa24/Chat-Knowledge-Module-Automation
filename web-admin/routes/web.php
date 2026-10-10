@@ -36,4 +36,7 @@ Route::middleware('auth')->group(function () {
     Route::get('/unanswered-questions', [ChatLogController::class, 'unanswered'])->name('chat-logs.unanswered');
     Route::get('/feedback', [FeedbackListController::class, 'index'])->name('feedback.index');
     Route::post('/logout', [LoginController::class, 'logout'])->name('logout');
+
+    Route::get('/users', function () { return view('users.index'); })->name('users.index');
+    Route::get('/settings', function () { return view('settings.index'); })->name('settings.index');
 });

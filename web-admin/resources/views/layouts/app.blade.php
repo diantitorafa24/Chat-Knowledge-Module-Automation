@@ -39,8 +39,8 @@
         <a href="{{ route('feedback.index') }}" class="sub {{ request()->routeIs('feedback.index') ? 'active' : '' }}">Feedback</a>
 
         <div class="menu-title">System</div>
-        <a href="#" class="sub">Users</a>
-        <a href="#" class="sub">Settings</a>
+        <a href="{{ route('users.index') }}" class="sub {{ request()->routeIs('users.*') ? 'active' : '' }}">Users</a>
+        <a href="{{ route('settings.index') }}" class="sub {{ request()->routeIs('settings.*') ? 'active' : '' }}">Settings</a>
         <div class="menu-title">Akun</div>
         <div class="px-3 py-2 text-white-50 small">{{ auth()->user()->name }}</div>
         <form method="POST" action="{{ route('logout') }}" class="px-3 pb-3">
