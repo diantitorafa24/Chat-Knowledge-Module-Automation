@@ -6,13 +6,14 @@
     <title>@yield('title', 'Dashboard') - CIKA Admin</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <style>
-        body { background: #f4f6f9; }
-        .sidebar { width: 250px; min-height: 100vh; background: #1f2937; }
+        body { background: #f4f6f9; overflow: hidden; margin: 0; }
+        .sidebar { width: 250px; height: 100vh; background: #1f2937; overflow-y: auto; }
         .sidebar .brand { color: #fff; font-weight: 700; font-size: 1.25rem; padding: 1rem 1.25rem; border-bottom: 1px solid #374151; }
         .sidebar .menu-title { color: #9ca3af; font-size: .7rem; text-transform: uppercase; letter-spacing: .08em; padding: 1rem 1.25rem .25rem; }
         .sidebar a { display: block; color: #d1d5db; text-decoration: none; padding: .45rem 1.25rem; font-size: .9rem; }
         .sidebar a:hover, .sidebar a.active { background: #374151; color: #fff; }
         .sidebar a.sub { padding-left: 2.25rem; }
+        main.flex-grow-1 { height: 100vh; overflow-y: auto; }
     </style>
 </head>
 <body>
