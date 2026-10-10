@@ -4,6 +4,8 @@ namespace App\Jobs;
 
 use App\Models\Document;
 use App\Models\Module;
+use App\Models\DocumentImage;
+use App\Services\ImageVisionService;
 use App\Services\ChunkIndexer;
 use App\Services\ChunkingService;
 use App\Services\DocumentParserService;
@@ -26,7 +28,7 @@ class ProcessDocumentJob implements ShouldQueue
     {
     }
 
-    public function handle(DocumentParserService $parser, ChunkingService $chunker, ChunkIndexer $indexer): void
+    public function handle(DocumentParserService $parser, ChunkingService $chunker, ChunkIndexer $indexer, ImageVisionService $vision): void
     {
         $document = Document::find($this->documentId);
 
@@ -43,6 +45,50 @@ class ProcessDocumentJob implements ShouldQueue
             }
 
             $result = $parser->parse(Storage::path($document->file_path));
+
+
+            // Proses gambar dengan Gemini Vision
+            $document->update(['processing_status' => 'processing_images']);
+            $currentSection = '';
+            $imageIndex = 1;
+            
+            foreach ($result['blocks'] as &$block) {
+                if ($block['type'] === 'heading') {
+                    $currentSection = $block['text'];
+                }
+                
+                if ($block['type'] === 'image') {
+                    // Simpan gambar ke storage
+                    $ext = str_replace('image/', '', $block['mime']);
+                    if ($ext === 'jpeg') $ext = 'jpg';
+                    $fileName = 'modules/' . $document->module_id . '/images/doc_' . $document->id . '_img_' . $imageIndex . '.' . $ext;
+                    Storage::put($fileName, base64_decode($block['data']));
+                    
+                    // Panggil Gemini Vision
+                    $desc = $vision->describe($block['data'], $block['mime'], $currentSection);
+                    
+                    // Simpan ke database
+                    $docImage = DocumentImage::create([
+                        'document_id' => $document->id,
+                        'module_id' => $document->module_id,
+                        'image_index' => $imageIndex,
+                        'storage_path' => $fileName,
+                        'mime_type' => $block['mime'],
+                        'description' => $desc,
+                        'section' => $currentSection,
+                        'is_active' => false,
+                    ]);
+                    
+                    // Ubah block menjadi paragraf agar di-chunk oleh ChunkingService
+                    $block = [
+                        'type' => 'paragraph',
+                        'text' => "Lampiran Gambar: " . $desc . " [IMG_REF:{$docImage->id}]",
+                    ];
+                    
+                    $imageIndex++;
+                }
+            }
+            unset($block);
 
             Storage::put(
                 self::extractedPath($document),

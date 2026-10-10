@@ -38,6 +38,7 @@ class AskController extends Controller
                 'found' => false,
                 'answer' => $answer,
                 'sources' => [],
+                'image_urls' => [],
                 'chat_log_id' => $log?->id,
             ]);
         }
@@ -65,6 +66,7 @@ class AskController extends Controller
                 'subsection' => $r['subsection'],
                 'score' => $r['score'],
             ], $search['results']),
+            'image_urls' => $search['image_urls'] ?? [],
             'chat_log_id' => $log?->id,
         ]);
     }

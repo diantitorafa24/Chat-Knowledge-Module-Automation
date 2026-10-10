@@ -27,7 +27,19 @@ class DocumentParserService
 
         $documentXml = $zip->getFromName('word/document.xml');
         $stylesXml = $zip->getFromName('word/styles.xml');
+        $relsXml = $zip->getFromName('word/_rels/document.xml.rels');
+        
+        // Extract all images to a temp structure
+        $imagesData = [];
+        for ($i = 0; $i < $zip->numFiles; $i++) {
+            $name = $zip->getNameIndex($i);
+            if (str_starts_with($name, 'word/media/')) {
+                $imagesData[$name] = $zip->getFromIndex($i);
+            }
+        }
         $zip->close();
+        
+        $rels = $this->readRels($relsXml);
 
         if ($documentXml === false) {
             throw new RuntimeException('File DOCX tidak memiliki isi dokumen.');
@@ -51,7 +63,7 @@ class DocumentParserService
         }
 
         $blocks = [];
-        $this->collect($body, $xpath, $styles, $blocks);
+        $this->collect($body, $xpath, $styles, $blocks, $rels, $imagesData);
 
         if ($blocks === []) {
             throw new RuntimeException('Dokumen tidak berisi teks yang bisa dibaca.');
@@ -60,7 +72,7 @@ class DocumentParserService
         return ['blocks' => $blocks, 'stats' => $this->stats($blocks)];
     }
 
-    private function collect(DOMElement $container, DOMXPath $xpath, array $styles, array &$blocks): void
+    private function collect(DOMElement $container, DOMXPath $xpath, array $styles, array &$blocks, array $rels = [], array $imagesData = []): void
     {
         foreach ($container->childNodes as $node) {
             if (! $node instanceof DOMElement || $node->namespaceURI !== self::NS) {
@@ -69,13 +81,15 @@ class DocumentParserService
 
             if ($node->localName === 'p') {
                 $block = $this->parseParagraph($node, $xpath, $styles);
+                // Extract drawing/images inside paragraph
+                $this->extractImages($node, $xpath, $rels, $imagesData, $blocks);
             } elseif ($node->localName === 'tbl') {
                 $block = $this->parseTable($node, $xpath);
             } elseif ($node->localName === 'sdt') {
                 $content = $xpath->query('w:sdtContent', $node)->item(0);
 
                 if ($content instanceof DOMElement) {
-                    $this->collect($content, $xpath, $styles, $blocks);
+                    $this->collect($content, $xpath, $styles, $blocks, $rels, $imagesData);
                 }
 
                 continue;
@@ -151,6 +165,53 @@ class DocumentParserService
         }
 
         return $rows === [] ? null : ['type' => 'table', 'rows' => $rows];
+    }
+
+    
+    private function readRels(?string $xml): array
+    {
+        $rels = [];
+        if (!$xml) return $rels;
+        $dom = new DOMDocument();
+        if (@$dom->loadXML($xml)) {
+            $xpath = new DOMXPath($dom);
+            $xpath->registerNamespace('rel', 'http://schemas.openxmlformats.org/package/2006/relationships');
+            foreach ($xpath->query('//rel:Relationship') as $rel) {
+                $rels[$rel->getAttribute('Id')] = 'word/' . $rel->getAttribute('Target');
+            }
+        }
+        return $rels;
+    }
+
+    private function extractImages(DOMElement $p, DOMXPath $xpath, array $rels, array $imagesData, array &$blocks): void
+    {
+        $xpath->registerNamespace('a', 'http://schemas.openxmlformats.org/drawingml/2006/main');
+        $xpath->registerNamespace('r', 'http://schemas.openxmlformats.org/officeDocument/2006/relationships');
+        foreach ($xpath->query('.//w:drawing//a:blip', $p) as $blip) {
+            $rId = $blip->getAttributeNS('http://schemas.openxmlformats.org/officeDocument/2006/relationships', 'embed');
+            if ($rId && isset($rels[$rId])) {
+                $target = $rels[$rId];
+                if (isset($imagesData[$target])) {
+                    $blocks[] = [
+                        'type' => 'image',
+                        'mime' => $this->getMimeType($target),
+                        'data' => base64_encode($imagesData[$target]),
+                    ];
+                }
+            }
+        }
+    }
+
+    private function getMimeType(string $filename): string
+    {
+        $ext = strtolower(pathinfo($filename, PATHINFO_EXTENSION));
+        return match ($ext) {
+            'png' => 'image/png',
+            'jpg', 'jpeg' => 'image/jpeg',
+            'gif' => 'image/gif',
+            'svg' => 'image/svg+xml',
+            default => 'application/octet-stream',
+        };
     }
 
     private function paragraphText(DOMElement $p, DOMXPath $xpath): string
@@ -269,6 +330,9 @@ class DocumentParserService
                     break;
                 case 'table':
                     $stats['tables']++;
+                    break;
+                case 'image':
+                    $stats['images'] = ($stats['images'] ?? 0) + 1;
                     break;
             }
 
