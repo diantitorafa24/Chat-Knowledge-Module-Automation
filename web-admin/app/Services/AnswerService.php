@@ -26,10 +26,11 @@ class AnswerService
             throw new RuntimeException('GEMINI_API_KEY belum diisi di file .env.');
         }
 
-        $model = config('rag.chat_model');
+        $model = \App\Models\Setting::get('ai_chat_model', config('rag.chat_model'));
         $url = 'https://generativelanguage.googleapis.com/v1beta/models/' . $model . ':generateContent';
 
-        $prompt = self::SYSTEM_PROMPT . "\n\nKonteks:\n" . $context . "\n\nPertanyaan: " . $question;
+        $systemPrompt = \App\Models\Setting::get('ai_system_prompt', self::SYSTEM_PROMPT);
+        $prompt = $systemPrompt . "\n\nKonteks:\n" . $context . "\n\nPertanyaan: " . $question;
 
         $response = null;
 

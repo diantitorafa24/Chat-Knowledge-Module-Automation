@@ -19,8 +19,8 @@ class RagSearchService
     public function search(string $question, ?int $moduleId = null, ?int $limit = null): array
     {
         $question = trim($question);
-        $limit = max(1, min($limit ?? (int) config('rag.top_k'), 10));
-        $minScore = (float) config('rag.min_score');
+        $limit = max(1, min($limit ?? \App\Models\Setting::get('rag_max_results', 3), 10));
+        $minScore = (float) \App\Models\Setting::get('rag_min_score', 0.60);
 
         $vector = $this->embeddings->embedQuery($question);
         $hits = $this->qdrant->search($vector, $limit, QdrantService::activeFilter($moduleId));

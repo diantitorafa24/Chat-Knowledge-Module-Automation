@@ -37,6 +37,12 @@ Route::middleware('auth')->group(function () {
     Route::get('/feedback', [FeedbackListController::class, 'index'])->name('feedback.index');
     Route::post('/logout', [LoginController::class, 'logout'])->name('logout');
 
-    Route::get('/users', function () { return view('users.index'); })->name('users.index');
-    Route::get('/settings', function () { return view('settings.index'); })->name('settings.index');
+    
+    Route::get('/users', [App\Http\Controllers\UserController::class, 'index'])->name('users.index');
+    Route::post('/users', [App\Http\Controllers\UserController::class, 'store'])->name('users.store');
+    Route::put('/users/{user}', [App\Http\Controllers\UserController::class, 'update'])->name('users.update');
+    Route::delete('/users/{user}', [App\Http\Controllers\UserController::class, 'destroy'])->name('users.destroy');
+
+    Route::get('/settings', [App\Http\Controllers\SettingController::class, 'index'])->name('settings.index');
+    Route::put('/settings', [App\Http\Controllers\SettingController::class, 'update'])->name('settings.update');
 });
