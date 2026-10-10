@@ -336,6 +336,10 @@ class DocumentParserService
                     break;
             }
 
+            if ($block['type'] === 'image') {
+                continue;
+            }
+
             $stats['characters'] += $block['type'] === 'table'
                 ? array_sum(array_map(fn ($row) => array_sum(array_map('mb_strlen', $row)), $block['rows']))
                 : mb_strlen($block['text']);

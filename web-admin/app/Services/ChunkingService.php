@@ -84,6 +84,12 @@ class ChunkingService
         };
 
         foreach ($blocks as $block) {
+            // Block image sudah dikonversi ke paragraph oleh ProcessDocumentJob
+            // Skip jika masih ada block image yang tidak terkonversi
+            if ($block['type'] === 'image') {
+                continue;
+            }
+
             if ($block['type'] === 'heading') {
                 $flush();
                 $level = (int) $block['level'];
