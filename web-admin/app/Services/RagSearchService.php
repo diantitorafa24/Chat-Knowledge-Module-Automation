@@ -37,13 +37,27 @@ class RagSearchService
 
         $results = [];
 
+        $imageUrls = [];
         foreach ($hits as $hit) {
             $chunk = $chunks->get((int) ($hit['payload']['chunk_id'] ?? $hit['id']));
 
-            // Titik yatim: chunk sudah dihapus dari MySQL tapi masih ada di Qdrant.
             if (! $chunk) {
                 continue;
             }
+            
+            // Extract images
+            if (preg_match_all('/\[IMG_REF:(\d+)\]/', $chunk->content, $matches)) {
+                foreach ($matches[1] as $imgId) {
+                    $img = \App\Models\DocumentImage::find($imgId);
+                    if ($img && $img->is_active) {
+                        $path = str_replace(config('app.url'), '', $img->publicUrl());
+                        $imageUrls[] = 'https://' . request()->getHost() . $path;
+                    }
+                }
+            }
+            
+            // Clean content from tag
+            $cleanContent = preg_replace('/\[IMG_REF:\d+\]/', '', $chunk->content);
 
             $module = $modules->get($chunk->module_id);
 
@@ -59,7 +73,7 @@ class RagSearchService
                 'document_name' => $chunk->metadata['document_name'] ?? null,
                 'section' => $chunk->section,
                 'subsection' => $chunk->subsection,
-                'content' => $chunk->content,
+                'content' => trim($cleanContent),
             ];
         }
 
@@ -71,6 +85,7 @@ class RagSearchService
             'min_score' => $minScore,
             'top_score' => $results[0]['score'] ?? null,
             'results' => $results,
+            'image_urls' => array_values(array_unique($imageUrls)),
             'context' => $this->buildContext($relevant),
         ];
     }

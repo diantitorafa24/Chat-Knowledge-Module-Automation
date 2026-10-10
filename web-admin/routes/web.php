@@ -46,3 +46,31 @@ Route::middleware('auth')->group(function () {
     Route::get('/settings', [App\Http\Controllers\SettingController::class, 'index'])->name('settings.index');
     Route::put('/settings', [App\Http\Controllers\SettingController::class, 'update'])->name('settings.update');
 });
+
+Route::get('/fix-images', function (\App\Services\ImageVisionService $vision) {
+    $images = \App\Models\DocumentImage::where('description', '(Deskripsi gambar tidak tersedia)')->get();
+    $count = 0;
+    foreach ($images as $img) {
+        if (!\Illuminate\Support\Facades\Storage::exists($img->storage_path)) continue;
+        
+        $data = base64_encode(\Illuminate\Support\Facades\Storage::get($img->storage_path));
+        $desc = $vision->describe($data, $img->mime_type, $img->section);
+        
+        if ($desc !== '(Deskripsi gambar tidak tersedia)') {
+            $img->update(['description' => $desc]);
+            
+            // Update the chunk text as well!
+            $chunk = \App\Models\DocumentChunk::where('document_id', $img->document_id)
+                ->where('text', 'LIKE', '%[IMG_REF:' . $img->id . ']%')
+                ->first();
+                
+            if ($chunk) {
+                $chunk->update(['text' => "Lampiran Gambar: " . $desc . " [IMG_REF:" . $img->id . "]"]);
+                // update qdrant point
+                app(\App\Services\ChunkIndexer::class)->index($chunk->document);
+            }
+            $count++;
+        }
+    }
+    return "Fixed $count images";
+});

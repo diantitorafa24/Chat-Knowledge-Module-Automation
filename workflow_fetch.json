@@ -1,0 +1,1094 @@
+{
+    "id":  "dTA9FUgcnKQFRajZ",
+    "name":  "CIKA - Test RAG Lengkap",
+    "description":  null,
+    "active":  true,
+    "activeVersionId":  "9502ac48-297a-45ed-a3c9-5b6a7d0a7a20",
+    "createdAt":  "2026-10-03T16:36:07.612Z",
+    "updatedAt":  "2026-10-10T09:40:48.453Z",
+    "isArchived":  false,
+    "versionId":  "9502ac48-297a-45ed-a3c9-5b6a7d0a7a20",
+    "versionCounter":  143,
+    "sourceWorkflowId":  null,
+    "triggerCount":  1,
+    "nodes":  [
+                  {
+                      "parameters":  {
+                                         "method":  "POST",
+                                         "url":  "https://cod-calculate-tumor-beans.trycloudflare.com/api/rag/ask",
+                                         "sendHeaders":  true,
+                                         "headerParameters":  {
+                                                                  "parameters":  [
+                                                                                     {
+                                                                                         "name":  "Authorization",
+                                                                                         "value":  "Bearer 5606ad4f2dd54c1f917ee71d29ef8ab497982ce5de7c42e18baffe071baa1dca"
+                                                                                     },
+                                                                                     {
+                                                                                         "name":  "Content-Type",
+                                                                                         "value":  "application/json"
+                                                                                     }
+                                                                                 ]
+                                                              },
+                                         "sendBody":  true,
+                                         "bodyParameters":  {
+                                                                "parameters":  [
+                                                                                   {
+                                                                                       "name":  "question",
+                                                                                       "value":  "={{ $json.message.text.replace(/@\\w+\\s*/, \u0027\u0027) }}"
+                                                                                   },
+                                                                                   {
+                                                                                       "name":  "telegram_user_id",
+                                                                                       "value":  "={{ $json.message.from.id }}"
+                                                                                   },
+                                                                                   {
+                                                                                       "name":  "username",
+                                                                                       "value":  "={{ $json.message.from.username }}"
+                                                                                   },
+                                                                                   {
+                                                                                       "name":  "group_id",
+                                                                                       "value":  "={{ $json.message.chat.id }}"
+                                                                                   }
+                                                                               ]
+                                                            },
+                                         "options":  {
+                                                         "timeout":  30000
+                                                     }
+                                     },
+                      "id":  "baf4d0df-d907-481c-ad49-09d9d34f56ce",
+                      "name":  "Tanya CIKA",
+                      "type":  "n8n-nodes-base.httpRequest",
+                      "typeVersion":  4.2,
+                      "position":  [
+                                       -768,
+                                       -32
+                                   ]
+                  },
+                  {
+                      "parameters":  {
+                                         "conditions":  {
+                                                            "options":  {
+                                                                            "caseSensitive":  true,
+                                                                            "leftValue":  "",
+                                                                            "typeValidation":  "strict",
+                                                                            "version":  1
+                                                                        },
+                                                            "conditions":  [
+                                                                               {
+                                                                                   "id":  "c1",
+                                                                                   "leftValue":  "={{ $json.found }}",
+                                                                                   "rightValue":  true,
+                                                                                   "operator":  {
+                                                                                                    "type":  "boolean",
+                                                                                                    "operation":  "true",
+                                                                                                    "singleValue":  true
+                                                                                                }
+                                                                               }
+                                                                           ],
+                                                            "combinator":  "and"
+                                                        },
+                                         "options":  {
+
+                                                     }
+                                     },
+                      "id":  "d33c4bf6-e2b2-4e12-ae5f-328445d27da5",
+                      "name":  "Ada Jawaban?",
+                      "type":  "n8n-nodes-base.if",
+                      "typeVersion":  2,
+                      "position":  [
+                                       -544,
+                                       -32
+                                   ]
+                  },
+                  {
+                      "parameters":  {
+                                         "assignments":  {
+                                                             "assignments":  [
+                                                                                 {
+                                                                                     "id":  "a1",
+                                                                                     "name":  "pesan_balasan",
+                                                                                     "type":  "string",
+                                                                                     "value":  "={{ $json.answer }}"
+                                                                                 }
+                                                                             ]
+                                                         },
+                                         "includeOtherFields":  true,
+                                         "options":  {
+
+                                                     }
+                                     },
+                      "id":  "4b8498fb-0e22-42c9-9ba7-65ade34afee7",
+                      "name":  "Format Jawaban Ditemukan",
+                      "type":  "n8n-nodes-base.set",
+                      "typeVersion":  3.4,
+                      "position":  [
+                                       0,
+                                       -64
+                                   ]
+                  },
+                  {
+                      "parameters":  {
+                                         "assignments":  {
+                                                             "assignments":  [
+                                                                                 {
+                                                                                     "id":  "a2",
+                                                                                     "name":  "pesan_balasan",
+                                                                                     "type":  "string",
+                                                                                     "value":  "Maaf, informasi ini tidak ditemukan di modul yang tersedia."
+                                                                                 }
+                                                                             ]
+                                                         },
+                                         "includeOtherFields":  true,
+                                         "options":  {
+
+                                                     }
+                                     },
+                      "id":  "353956c4-c825-4613-9520-e6e3d4ecbbdc",
+                      "name":  "Format Tidak Ditemukan",
+                      "type":  "n8n-nodes-base.set",
+                      "typeVersion":  3.4,
+                      "position":  [
+                                       -320,
+                                       80
+                                   ]
+                  },
+                  {
+                      "parameters":  {
+                                         "updates":  [
+                                                         "message",
+                                                         "callback_query"
+                                                     ],
+                                         "additionalFields":  {
+
+                                                              }
+                                     },
+                      "id":  "61f48d15-6a26-42c2-a224-ce8ebcc87d95",
+                      "name":  "Telegram Trigger",
+                      "webhookId":  "7481f72c-acb7-4b2c-a739-05281d70febd",
+                      "type":  "n8n-nodes-base.telegramTrigger",
+                      "typeVersion":  1.5,
+                      "position":  [
+                                       -1200,
+                                       -16
+                                   ],
+                      "credentials":  {
+                                          "telegramApi":  {
+                                                              "id":  "NfTjLcnUwdxoXxMA",
+                                                              "name":  "Telegram CIKA-AI"
+                                                          }
+                                      }
+                  },
+                  {
+                      "parameters":  {
+                                         "chatId":  "={{ $(\u0027Telegram Trigger\u0027).first().json.message.chat.id }}",
+                                         "text":  "={{ $json.pesan_balasan }}",
+                                         "replyMarkup":  "inlineKeyboard",
+                                         "inlineKeyboard":  {
+                                                                "rows":  [
+                                                                             {
+                                                                                 "row":  {
+                                                                                             "buttons":  [
+                                                                                                             {
+                                                                                                                 "text":  "?? Membantu",
+                                                                                                                 "additionalFields":  {
+                                                                                                                                          "callback_data":  "=fb_1_{{ $json.chat_log_id }}"
+                                                                                                                                      }
+                                                                                                             },
+                                                                                                             {
+                                                                                                                 "text":  "?? Kurang",
+                                                                                                                 "additionalFields":  {
+                                                                                                                                          "callback_data":  "=fb_0_{{ $json.chat_log_id }}"
+                                                                                                                                      }
+                                                                                                             }
+                                                                                                         ]
+                                                                                         }
+                                                                             }
+                                                                         ]
+                                                            },
+                                         "additionalFields":  {
+
+                                                              }
+                                     },
+                      "id":  "c8259986-3203-478e-833d-0de6a6fc7e9b",
+                      "name":  "Send a text message",
+                      "webhookId":  "a672476c-b7f4-4a3d-bee0-e7df8090765f",
+                      "type":  "n8n-nodes-base.telegram",
+                      "typeVersion":  1.2,
+                      "alwaysOutputData":  false,
+                      "position":  [
+                                       272,
+                                       -64
+                                   ],
+                      "credentials":  {
+                                          "telegramApi":  {
+                                                              "id":  "NfTjLcnUwdxoXxMA",
+                                                              "name":  "Telegram CIKA-AI"
+                                                          }
+                                      }
+                  },
+                  {
+                      "parameters":  {
+                                         "chatId":  "={{ $(\u0027Telegram Trigger\u0027).first().json.message.chat.id }}",
+                                         "text":  "={{ $json.pesan_balasan }}",
+                                         "additionalFields":  {
+
+                                                              }
+                                     },
+                      "id":  "0a762ffd-38a5-4598-826d-c637d8f70873",
+                      "name":  "Send a text message1",
+                      "webhookId":  "a672476c-b7f4-4a3d-bee0-e7df8090765f",
+                      "type":  "n8n-nodes-base.telegram",
+                      "typeVersion":  1.2,
+                      "position":  [
+                                       -128,
+                                       80
+                                   ],
+                      "credentials":  {
+                                          "telegramApi":  {
+                                                              "id":  "NfTjLcnUwdxoXxMA",
+                                                              "name":  "Telegram CIKA-AI"
+                                                          }
+                                      }
+                  },
+                  {
+                      "parameters":  {
+                                         "conditions":  {
+                                                            "options":  {
+                                                                            "caseSensitive":  true,
+                                                                            "leftValue":  "",
+                                                                            "typeValidation":  "strict",
+                                                                            "version":  3
+                                                                        },
+                                                            "conditions":  [
+                                                                               {
+                                                                                   "id":  "0edfbfbb-09e5-437f-a2f8-ba02524d6e43",
+                                                                                   "leftValue":  "={{ $json.message }}",
+                                                                                   "rightValue":  "",
+                                                                                   "operator":  {
+                                                                                                    "type":  "object",
+                                                                                                    "operation":  "exists",
+                                                                                                    "singleValue":  true
+                                                                                                }
+                                                                               }
+                                                                           ],
+                                                            "combinator":  "and"
+                                                        },
+                                         "options":  {
+
+                                                     }
+                                     },
+                      "id":  "f95556bb-7645-43e6-805f-89920f1a7ac1",
+                      "name":  "If",
+                      "type":  "n8n-nodes-base.if",
+                      "typeVersion":  2.3,
+                      "position":  [
+                                       -992,
+                                       -16
+                                   ]
+                  },
+                  {
+                      "parameters":  {
+                                         "method":  "POST",
+                                         "url":  "https://cod-calculate-tumor-beans.trycloudflare.com/api/feedback",
+                                         "sendHeaders":  true,
+                                         "headerParameters":  {
+                                                                  "parameters":  [
+                                                                                     {
+                                                                                         "name":  "Authorization",
+                                                                                         "value":  "Bearer 5606ad4f2dd54c1f917ee71d29ef8ab497982ce5de7c42e18baffe071baa1dca"
+                                                                                     }
+                                                                                 ]
+                                                              },
+                                         "sendBody":  true,
+                                         "bodyParameters":  {
+                                                                "parameters":  [
+                                                                                   {
+                                                                                       "name":  "callback_data",
+                                                                                       "value":  "={{ $json.callback_query.data }}"
+                                                                                   },
+                                                                                   {
+                                                                                       "name":  "telegram_user_id",
+                                                                                       "value":  "={{ $json.callback_query.from.id }}"
+                                                                                   }
+                                                                               ]
+                                                            },
+                                         "options":  {
+
+                                                     }
+                                     },
+                      "id":  "fef32bf6-e5dd-428a-b1a7-d764c5197a94",
+                      "name":  "HTTP Request",
+                      "type":  "n8n-nodes-base.httpRequest",
+                      "typeVersion":  4.5,
+                      "position":  [
+                                       -768,
+                                       176
+                                   ]
+                  },
+                  {
+                      "parameters":  {
+                                         "resource":  "callback",
+                                         "queryId":  "={{ $(\u0027Telegram Trigger\u0027).first().json.callback_query.id }}",
+                                         "additionalFields":  {
+                                                                  "text":  "={{ $json.message }}"
+                                                              }
+                                     },
+                      "id":  "2bf29fe8-5cf1-4ab2-a337-e5caeff21ef0",
+                      "name":  "Answer Query a callback",
+                      "webhookId":  "ff4a84cb-a665-43d7-b7e8-b044ebc420f5",
+                      "type":  "n8n-nodes-base.telegram",
+                      "typeVersion":  1.2,
+                      "position":  [
+                                       -544,
+                                       176
+                                   ],
+                      "credentials":  {
+                                          "telegramApi":  {
+                                                              "id":  "NfTjLcnUwdxoXxMA",
+                                                              "name":  "Telegram CIKA-AI"
+                                                          }
+                                      }
+                  },
+                  {
+                      "parameters":  {
+                                         "conditions":  {
+                                                            "number":  [
+                                                                           {
+                                                                               "value1":  "={{ $json.image_urls.length }}",
+                                                                               "operation":  "larger"
+                                                                           }
+                                                                       ]
+                                                        }
+                                     },
+                      "id":  "cika_if_gambar",
+                      "name":  "Cek Gambar",
+                      "type":  "n8n-nodes-base.if",
+                      "typeVersion":  1,
+                      "position":  [
+                                       -320,
+                                       -80
+                                   ]
+                  },
+                  {
+                      "parameters":  {
+                                         "operation":  "sendPhoto",
+                                         "chatId":  "={{ $(\u0027Telegram Trigger\u0027).first().json.message.chat.id }}",
+                                         "additionalFields":  {
+
+                                                              }
+                                     },
+                      "id":  "cika_send_photo",
+                      "name":  "Kirim Gambar",
+                      "type":  "n8n-nodes-base.telegram",
+                      "typeVersion":  1,
+                      "position":  [
+                                       -160,
+                                       -256
+                                   ],
+                      "webhookId":  "44d376e5-38eb-4327-b280-d4846d0fe711",
+                      "credentials":  {
+                                          "telegramApi":  {
+                                                              "id":  "QnLh15m5yFst2Tf7",
+                                                              "name":  "Telegram account"
+                                                          }
+                                      }
+                  }
+              ],
+    "connections":  {
+                        "Tanya CIKA":  {
+                                           "main":  [
+                                                        [
+                                                            {
+                                                                "node":  "Ada Jawaban?",
+                                                                "type":  "main",
+                                                                "index":  0
+                                                            }
+                                                        ]
+                                                    ]
+                                       },
+                        "Ada Jawaban?":  {
+                                             "main":  [
+                                                          [
+                                                              {
+                                                                  "node":  "Cek Gambar",
+                                                                  "type":  "main",
+                                                                  "index":  0
+                                                              }
+                                                          ],
+                                                          [
+                                                              {
+                                                                  "node":  "Format Tidak Ditemukan",
+                                                                  "type":  "main",
+                                                                  "index":  0
+                                                              }
+                                                          ]
+                                                      ]
+                                         },
+                        "Format Jawaban Ditemukan":  {
+                                                         "main":  [
+                                                                      [
+                                                                          {
+                                                                              "node":  "Send a text message",
+                                                                              "type":  "main",
+                                                                              "index":  0
+                                                                          }
+                                                                      ]
+                                                                  ]
+                                                     },
+                        "Format Tidak Ditemukan":  {
+                                                       "main":  [
+                                                                    [
+                                                                        {
+                                                                            "node":  "Send a text message1",
+                                                                            "type":  "main",
+                                                                            "index":  0
+                                                                        }
+                                                                    ]
+                                                                ]
+                                                   },
+                        "Telegram Trigger":  {
+                                                 "main":  [
+                                                              [
+                                                                  {
+                                                                      "node":  "If",
+                                                                      "type":  "main",
+                                                                      "index":  0
+                                                                  }
+                                                              ]
+                                                          ]
+                                             },
+                        "If":  {
+                                   "main":  [
+                                                [
+                                                    {
+                                                        "node":  "Tanya CIKA",
+                                                        "type":  "main",
+                                                        "index":  0
+                                                    }
+                                                ],
+                                                [
+                                                    {
+                                                        "node":  "HTTP Request",
+                                                        "type":  "main",
+                                                        "index":  0
+                                                    }
+                                                ]
+                                            ]
+                               },
+                        "HTTP Request":  {
+                                             "main":  [
+                                                          [
+                                                              {
+                                                                  "node":  "Answer Query a callback",
+                                                                  "type":  "main",
+                                                                  "index":  0
+                                                              }
+                                                          ]
+                                                      ]
+                                         },
+                        "Send a text message":  {
+                                                    "main":  [
+                                                                 [
+
+                                                                 ]
+                                                             ]
+                                                },
+                        "Cek Gambar":  {
+                                           "main":  [
+                                                        [
+                                                            {
+                                                                "node":  "Kirim Gambar",
+                                                                "type":  "main",
+                                                                "index":  0
+                                                            }
+                                                        ],
+                                                        [
+                                                            {
+                                                                "node":  "Format Jawaban Ditemukan",
+                                                                "type":  "main",
+                                                                "index":  0
+                                                            }
+                                                        ]
+                                                    ]
+                                       },
+                        "Kirim Gambar":  {
+                                             "main":  [
+                                                          [
+                                                              {
+                                                                  "node":  "Format Jawaban Ditemukan",
+                                                                  "type":  "main",
+                                                                  "index":  0
+                                                              }
+                                                          ]
+                                                      ]
+                                         }
+                    },
+    "nodeGroups":  [
+
+                   ],
+    "settings":  {
+                     "executionOrder":  "v1",
+                     "binaryMode":  "separate"
+                 },
+    "staticData":  null,
+    "pinData":  {
+
+                },
+    "meta":  {
+                 "templateCredsSetupCompleted":  true
+             },
+    "tags":  [
+
+             ],
+    "shared":  [
+                   {
+                       "role":  "workflow:owner",
+                       "workflowId":  "dTA9FUgcnKQFRajZ",
+                       "projectId":  "YkcYmek54Iyhpeyj",
+                       "project":  {
+                                       "id":  "YkcYmek54Iyhpeyj",
+                                       "name":  "disa cloud \u003cdisacloudshared.blue@gmail.com\u003e",
+                                       "type":  "personal",
+                                       "icon":  null,
+                                       "description":  null,
+                                       "customTelemetryTags":  [
+
+                                                               ],
+                                       "creatorId":  "87732261-d604-4d7e-b996-19910ade3d76",
+                                       "createdAt":  "2026-10-02T08:29:40.227Z",
+                                       "updatedAt":  "2026-10-02T08:33:23.804Z"
+                                   },
+                       "createdAt":  "2026-10-03T16:36:07.617Z",
+                       "updatedAt":  "2026-10-03T16:36:07.617Z"
+                   }
+               ],
+    "activeVersion":  {
+                          "versionId":  "9502ac48-297a-45ed-a3c9-5b6a7d0a7a20",
+                          "workflowId":  "dTA9FUgcnKQFRajZ",
+                          "nodes":  [
+                                        {
+                                            "parameters":  {
+                                                               "method":  "POST",
+                                                               "url":  "https://cod-calculate-tumor-beans.trycloudflare.com/api/rag/ask",
+                                                               "sendHeaders":  true,
+                                                               "headerParameters":  {
+                                                                                        "parameters":  [
+                                                                                                           {
+                                                                                                               "name":  "Authorization",
+                                                                                                               "value":  "Bearer 5606ad4f2dd54c1f917ee71d29ef8ab497982ce5de7c42e18baffe071baa1dca"
+                                                                                                           },
+                                                                                                           {
+                                                                                                               "name":  "Content-Type",
+                                                                                                               "value":  "application/json"
+                                                                                                           }
+                                                                                                       ]
+                                                                                    },
+                                                               "sendBody":  true,
+                                                               "bodyParameters":  {
+                                                                                      "parameters":  [
+                                                                                                         {
+                                                                                                             "name":  "question",
+                                                                                                             "value":  "={{ $json.message.text.replace(/@\\w+\\s*/, \u0027\u0027) }}"
+                                                                                                         },
+                                                                                                         {
+                                                                                                             "name":  "telegram_user_id",
+                                                                                                             "value":  "={{ $json.message.from.id }}"
+                                                                                                         },
+                                                                                                         {
+                                                                                                             "name":  "username",
+                                                                                                             "value":  "={{ $json.message.from.username }}"
+                                                                                                         },
+                                                                                                         {
+                                                                                                             "name":  "group_id",
+                                                                                                             "value":  "={{ $json.message.chat.id }}"
+                                                                                                         }
+                                                                                                     ]
+                                                                                  },
+                                                               "options":  {
+                                                                               "timeout":  30000
+                                                                           }
+                                                           },
+                                            "id":  "baf4d0df-d907-481c-ad49-09d9d34f56ce",
+                                            "name":  "Tanya CIKA",
+                                            "type":  "n8n-nodes-base.httpRequest",
+                                            "typeVersion":  4.2,
+                                            "position":  [
+                                                             -768,
+                                                             -32
+                                                         ]
+                                        },
+                                        {
+                                            "parameters":  {
+                                                               "conditions":  {
+                                                                                  "options":  {
+                                                                                                  "caseSensitive":  true,
+                                                                                                  "leftValue":  "",
+                                                                                                  "typeValidation":  "strict",
+                                                                                                  "version":  1
+                                                                                              },
+                                                                                  "conditions":  [
+                                                                                                     {
+                                                                                                         "id":  "c1",
+                                                                                                         "leftValue":  "={{ $json.found }}",
+                                                                                                         "rightValue":  true,
+                                                                                                         "operator":  {
+                                                                                                                          "type":  "boolean",
+                                                                                                                          "operation":  "true",
+                                                                                                                          "singleValue":  true
+                                                                                                                      }
+                                                                                                     }
+                                                                                                 ],
+                                                                                  "combinator":  "and"
+                                                                              },
+                                                               "options":  {
+
+                                                                           }
+                                                           },
+                                            "id":  "d33c4bf6-e2b2-4e12-ae5f-328445d27da5",
+                                            "name":  "Ada Jawaban?",
+                                            "type":  "n8n-nodes-base.if",
+                                            "typeVersion":  2,
+                                            "position":  [
+                                                             -544,
+                                                             -32
+                                                         ]
+                                        },
+                                        {
+                                            "parameters":  {
+                                                               "assignments":  {
+                                                                                   "assignments":  [
+                                                                                                       {
+                                                                                                           "id":  "a1",
+                                                                                                           "name":  "pesan_balasan",
+                                                                                                           "type":  "string",
+                                                                                                           "value":  "={{ $json.answer }}"
+                                                                                                       }
+                                                                                                   ]
+                                                                               },
+                                                               "includeOtherFields":  true,
+                                                               "options":  {
+
+                                                                           }
+                                                           },
+                                            "id":  "4b8498fb-0e22-42c9-9ba7-65ade34afee7",
+                                            "name":  "Format Jawaban Ditemukan",
+                                            "type":  "n8n-nodes-base.set",
+                                            "typeVersion":  3.4,
+                                            "position":  [
+                                                             0,
+                                                             -64
+                                                         ]
+                                        },
+                                        {
+                                            "parameters":  {
+                                                               "assignments":  {
+                                                                                   "assignments":  [
+                                                                                                       {
+                                                                                                           "id":  "a2",
+                                                                                                           "name":  "pesan_balasan",
+                                                                                                           "type":  "string",
+                                                                                                           "value":  "Maaf, informasi ini tidak ditemukan di modul yang tersedia."
+                                                                                                       }
+                                                                                                   ]
+                                                                               },
+                                                               "includeOtherFields":  true,
+                                                               "options":  {
+
+                                                                           }
+                                                           },
+                                            "id":  "353956c4-c825-4613-9520-e6e3d4ecbbdc",
+                                            "name":  "Format Tidak Ditemukan",
+                                            "type":  "n8n-nodes-base.set",
+                                            "typeVersion":  3.4,
+                                            "position":  [
+                                                             -320,
+                                                             80
+                                                         ]
+                                        },
+                                        {
+                                            "parameters":  {
+                                                               "updates":  [
+                                                                               "message",
+                                                                               "callback_query"
+                                                                           ],
+                                                               "additionalFields":  {
+
+                                                                                    }
+                                                           },
+                                            "id":  "61f48d15-6a26-42c2-a224-ce8ebcc87d95",
+                                            "name":  "Telegram Trigger",
+                                            "webhookId":  "7481f72c-acb7-4b2c-a739-05281d70febd",
+                                            "type":  "n8n-nodes-base.telegramTrigger",
+                                            "typeVersion":  1.5,
+                                            "position":  [
+                                                             -1200,
+                                                             -16
+                                                         ],
+                                            "credentials":  {
+                                                                "telegramApi":  {
+                                                                                    "id":  "NfTjLcnUwdxoXxMA",
+                                                                                    "name":  "Telegram CIKA-AI"
+                                                                                }
+                                                            }
+                                        },
+                                        {
+                                            "parameters":  {
+                                                               "chatId":  "={{ $(\u0027Telegram Trigger\u0027).first().json.message.chat.id }}",
+                                                               "text":  "={{ $json.pesan_balasan }}",
+                                                               "replyMarkup":  "inlineKeyboard",
+                                                               "inlineKeyboard":  {
+                                                                                      "rows":  [
+                                                                                                   {
+                                                                                                       "row":  {
+                                                                                                                   "buttons":  [
+                                                                                                                                   {
+                                                                                                                                       "text":  "?? Membantu",
+                                                                                                                                       "additionalFields":  "@{callback_data==fb_1_{{ $json.chat_log_id }}}"
+                                                                                                                                   },
+                                                                                                                                   {
+                                                                                                                                       "text":  "?? Kurang",
+                                                                                                                                       "additionalFields":  "@{callback_data==fb_0_{{ $json.chat_log_id }}}"
+                                                                                                                                   }
+                                                                                                                               ]
+                                                                                                               }
+                                                                                                   }
+                                                                                               ]
+                                                                                  },
+                                                               "additionalFields":  {
+
+                                                                                    }
+                                                           },
+                                            "id":  "c8259986-3203-478e-833d-0de6a6fc7e9b",
+                                            "name":  "Send a text message",
+                                            "webhookId":  "a672476c-b7f4-4a3d-bee0-e7df8090765f",
+                                            "type":  "n8n-nodes-base.telegram",
+                                            "typeVersion":  1.2,
+                                            "alwaysOutputData":  false,
+                                            "position":  [
+                                                             272,
+                                                             -64
+                                                         ],
+                                            "credentials":  {
+                                                                "telegramApi":  {
+                                                                                    "id":  "NfTjLcnUwdxoXxMA",
+                                                                                    "name":  "Telegram CIKA-AI"
+                                                                                }
+                                                            }
+                                        },
+                                        {
+                                            "parameters":  {
+                                                               "chatId":  "={{ $(\u0027Telegram Trigger\u0027).first().json.message.chat.id }}",
+                                                               "text":  "={{ $json.pesan_balasan }}",
+                                                               "additionalFields":  {
+
+                                                                                    }
+                                                           },
+                                            "id":  "0a762ffd-38a5-4598-826d-c637d8f70873",
+                                            "name":  "Send a text message1",
+                                            "webhookId":  "a672476c-b7f4-4a3d-bee0-e7df8090765f",
+                                            "type":  "n8n-nodes-base.telegram",
+                                            "typeVersion":  1.2,
+                                            "position":  [
+                                                             -128,
+                                                             80
+                                                         ],
+                                            "credentials":  {
+                                                                "telegramApi":  {
+                                                                                    "id":  "NfTjLcnUwdxoXxMA",
+                                                                                    "name":  "Telegram CIKA-AI"
+                                                                                }
+                                                            }
+                                        },
+                                        {
+                                            "parameters":  {
+                                                               "conditions":  {
+                                                                                  "options":  {
+                                                                                                  "caseSensitive":  true,
+                                                                                                  "leftValue":  "",
+                                                                                                  "typeValidation":  "strict",
+                                                                                                  "version":  3
+                                                                                              },
+                                                                                  "conditions":  [
+                                                                                                     {
+                                                                                                         "id":  "0edfbfbb-09e5-437f-a2f8-ba02524d6e43",
+                                                                                                         "leftValue":  "={{ $json.message }}",
+                                                                                                         "rightValue":  "",
+                                                                                                         "operator":  {
+                                                                                                                          "type":  "object",
+                                                                                                                          "operation":  "exists",
+                                                                                                                          "singleValue":  true
+                                                                                                                      }
+                                                                                                     }
+                                                                                                 ],
+                                                                                  "combinator":  "and"
+                                                                              },
+                                                               "options":  {
+
+                                                                           }
+                                                           },
+                                            "id":  "f95556bb-7645-43e6-805f-89920f1a7ac1",
+                                            "name":  "If",
+                                            "type":  "n8n-nodes-base.if",
+                                            "typeVersion":  2.3,
+                                            "position":  [
+                                                             -992,
+                                                             -16
+                                                         ]
+                                        },
+                                        {
+                                            "parameters":  {
+                                                               "method":  "POST",
+                                                               "url":  "https://cod-calculate-tumor-beans.trycloudflare.com/api/feedback",
+                                                               "sendHeaders":  true,
+                                                               "headerParameters":  {
+                                                                                        "parameters":  [
+                                                                                                           {
+                                                                                                               "name":  "Authorization",
+                                                                                                               "value":  "Bearer 5606ad4f2dd54c1f917ee71d29ef8ab497982ce5de7c42e18baffe071baa1dca"
+                                                                                                           }
+                                                                                                       ]
+                                                                                    },
+                                                               "sendBody":  true,
+                                                               "bodyParameters":  {
+                                                                                      "parameters":  [
+                                                                                                         {
+                                                                                                             "name":  "callback_data",
+                                                                                                             "value":  "={{ $json.callback_query.data }}"
+                                                                                                         },
+                                                                                                         {
+                                                                                                             "name":  "telegram_user_id",
+                                                                                                             "value":  "={{ $json.callback_query.from.id }}"
+                                                                                                         }
+                                                                                                     ]
+                                                                                  },
+                                                               "options":  {
+
+                                                                           }
+                                                           },
+                                            "id":  "fef32bf6-e5dd-428a-b1a7-d764c5197a94",
+                                            "name":  "HTTP Request",
+                                            "type":  "n8n-nodes-base.httpRequest",
+                                            "typeVersion":  4.5,
+                                            "position":  [
+                                                             -768,
+                                                             176
+                                                         ]
+                                        },
+                                        {
+                                            "parameters":  {
+                                                               "resource":  "callback",
+                                                               "queryId":  "={{ $(\u0027Telegram Trigger\u0027).first().json.callback_query.id }}",
+                                                               "additionalFields":  {
+                                                                                        "text":  "={{ $json.message }}"
+                                                                                    }
+                                                           },
+                                            "id":  "2bf29fe8-5cf1-4ab2-a337-e5caeff21ef0",
+                                            "name":  "Answer Query a callback",
+                                            "webhookId":  "ff4a84cb-a665-43d7-b7e8-b044ebc420f5",
+                                            "type":  "n8n-nodes-base.telegram",
+                                            "typeVersion":  1.2,
+                                            "position":  [
+                                                             -544,
+                                                             176
+                                                         ],
+                                            "credentials":  {
+                                                                "telegramApi":  {
+                                                                                    "id":  "NfTjLcnUwdxoXxMA",
+                                                                                    "name":  "Telegram CIKA-AI"
+                                                                                }
+                                                            }
+                                        },
+                                        {
+                                            "parameters":  {
+                                                               "conditions":  {
+                                                                                  "number":  [
+                                                                                                 {
+                                                                                                     "value1":  "={{ $json.image_urls.length }}",
+                                                                                                     "operation":  "larger"
+                                                                                                 }
+                                                                                             ]
+                                                                              }
+                                                           },
+                                            "id":  "cika_if_gambar",
+                                            "name":  "Cek Gambar",
+                                            "type":  "n8n-nodes-base.if",
+                                            "typeVersion":  1,
+                                            "position":  [
+                                                             -320,
+                                                             -80
+                                                         ]
+                                        },
+                                        {
+                                            "parameters":  {
+                                                               "operation":  "sendPhoto",
+                                                               "chatId":  "={{ $(\u0027Telegram Trigger\u0027).first().json.message.chat.id }}",
+                                                               "additionalFields":  {
+
+                                                                                    }
+                                                           },
+                                            "id":  "cika_send_photo",
+                                            "name":  "Kirim Gambar",
+                                            "type":  "n8n-nodes-base.telegram",
+                                            "typeVersion":  1,
+                                            "position":  [
+                                                             -160,
+                                                             -256
+                                                         ],
+                                            "webhookId":  "44d376e5-38eb-4327-b280-d4846d0fe711",
+                                            "credentials":  {
+                                                                "telegramApi":  {
+                                                                                    "id":  "QnLh15m5yFst2Tf7",
+                                                                                    "name":  "Telegram account"
+                                                                                }
+                                                            }
+                                        }
+                                    ],
+                          "connections":  {
+                                              "Tanya CIKA":  {
+                                                                 "main":  [
+                                                                              [
+                                                                                  {
+                                                                                      "node":  "Ada Jawaban?",
+                                                                                      "type":  "main",
+                                                                                      "index":  0
+                                                                                  }
+                                                                              ]
+                                                                          ]
+                                                             },
+                                              "Ada Jawaban?":  {
+                                                                   "main":  [
+                                                                                [
+                                                                                    {
+                                                                                        "node":  "Cek Gambar",
+                                                                                        "type":  "main",
+                                                                                        "index":  0
+                                                                                    }
+                                                                                ],
+                                                                                [
+                                                                                    {
+                                                                                        "node":  "Format Tidak Ditemukan",
+                                                                                        "type":  "main",
+                                                                                        "index":  0
+                                                                                    }
+                                                                                ]
+                                                                            ]
+                                                               },
+                                              "Format Jawaban Ditemukan":  {
+                                                                               "main":  [
+                                                                                            [
+                                                                                                {
+                                                                                                    "node":  "Send a text message",
+                                                                                                    "type":  "main",
+                                                                                                    "index":  0
+                                                                                                }
+                                                                                            ]
+                                                                                        ]
+                                                                           },
+                                              "Format Tidak Ditemukan":  {
+                                                                             "main":  [
+                                                                                          [
+                                                                                              {
+                                                                                                  "node":  "Send a text message1",
+                                                                                                  "type":  "main",
+                                                                                                  "index":  0
+                                                                                              }
+                                                                                          ]
+                                                                                      ]
+                                                                         },
+                                              "Telegram Trigger":  {
+                                                                       "main":  [
+                                                                                    [
+                                                                                        {
+                                                                                            "node":  "If",
+                                                                                            "type":  "main",
+                                                                                            "index":  0
+                                                                                        }
+                                                                                    ]
+                                                                                ]
+                                                                   },
+                                              "If":  {
+                                                         "main":  [
+                                                                      [
+                                                                          {
+                                                                              "node":  "Tanya CIKA",
+                                                                              "type":  "main",
+                                                                              "index":  0
+                                                                          }
+                                                                      ],
+                                                                      [
+                                                                          {
+                                                                              "node":  "HTTP Request",
+                                                                              "type":  "main",
+                                                                              "index":  0
+                                                                          }
+                                                                      ]
+                                                                  ]
+                                                     },
+                                              "HTTP Request":  {
+                                                                   "main":  [
+                                                                                [
+                                                                                    {
+                                                                                        "node":  "Answer Query a callback",
+                                                                                        "type":  "main",
+                                                                                        "index":  0
+                                                                                    }
+                                                                                ]
+                                                                            ]
+                                                               },
+                                              "Send a text message":  {
+                                                                          "main":  [
+                                                                                       [
+
+                                                                                       ]
+                                                                                   ]
+                                                                      },
+                                              "Cek Gambar":  {
+                                                                 "main":  [
+                                                                              [
+                                                                                  {
+                                                                                      "node":  "Kirim Gambar",
+                                                                                      "type":  "main",
+                                                                                      "index":  0
+                                                                                  }
+                                                                              ],
+                                                                              [
+                                                                                  {
+                                                                                      "node":  "Format Jawaban Ditemukan",
+                                                                                      "type":  "main",
+                                                                                      "index":  0
+                                                                                  }
+                                                                              ]
+                                                                          ]
+                                                             },
+                                              "Kirim Gambar":  {
+                                                                   "main":  [
+                                                                                [
+                                                                                    {
+                                                                                        "node":  "Format Jawaban Ditemukan",
+                                                                                        "type":  "main",
+                                                                                        "index":  0
+                                                                                    }
+                                                                                ]
+                                                                            ]
+                                                               }
+                                          },
+                          "nodeGroups":  [
+
+                                         ],
+                          "authors":  "disa cloud",
+                          "name":  "Version 9502ac48",
+                          "description":  "",
+                          "autosaved":  true,
+                          "createdAt":  "2026-10-10T09:40:48.454Z",
+                          "updatedAt":  "2026-10-10T11:29:02.000Z",
+                          "workflowPublishHistory":  [
+                                                         {
+                                                             "id":  43,
+                                                             "workflowId":  "dTA9FUgcnKQFRajZ",
+                                                             "versionId":  "9502ac48-297a-45ed-a3c9-5b6a7d0a7a20",
+                                                             "event":  "activated",
+                                                             "userId":  "87732261-d604-4d7e-b996-19910ade3d76",
+                                                             "createdAt":  "2026-10-10T11:29:02.727Z"
+                                                         }
+                                                     ]
+                      }
+}

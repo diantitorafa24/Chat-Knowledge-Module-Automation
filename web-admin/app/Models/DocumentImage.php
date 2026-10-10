@@ -37,6 +37,6 @@ class DocumentImage extends Model
      */
     public function publicUrl(): string
     {
-        return Storage::url($this->storage_path);
+        return Storage::disk('public')->url($this->storage_path);
     }
 }

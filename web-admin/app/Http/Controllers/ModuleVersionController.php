@@ -54,11 +54,13 @@ class ModuleVersionController extends Controller
                 Document::where('id', $old->document_id)
                     ->where('processing_status', 'active')
                     ->update(['processing_status' => 'indexed', 'progress' => 90]);
+                \App\Models\DocumentImage::where('document_id', $old->document_id)->update(['is_active' => false]);
             }
 
             $version->update(['status' => 'active']);
             $document->update(['processing_status' => 'active', 'progress' => 100]);
             $module->update(['status' => 'active', 'current_version' => $version->version]);
+            \App\Models\DocumentImage::where('document_id', $document->id)->update(['is_active' => true]);
         });
 
         return back()->with('success', 'Versi ' . $version->version . ' diaktifkan. Bot sekarang memakai versi ini.');
@@ -85,6 +87,7 @@ class ModuleVersionController extends Controller
 
             if ($version->document) {
                 $version->document->update(['processing_status' => 'indexed', 'progress' => 90]);
+                \App\Models\DocumentImage::where('document_id', $version->document->id)->update(['is_active' => false]);
             }
 
             $module->update(['status' => 'inactive', 'current_version' => null]);

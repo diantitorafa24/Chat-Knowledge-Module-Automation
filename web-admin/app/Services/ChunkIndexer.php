@@ -46,7 +46,7 @@ class ChunkIndexer
                     'section' => $chunk->section,
                     'subsection' => $chunk->subsection,
                     'chunk_index' => $chunk->chunk_index,
-                    'is_active' => false,
+                    'is_active' => $document->processing_status === 'active',
                 ],
             ];
 

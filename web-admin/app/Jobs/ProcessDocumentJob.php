@@ -62,7 +62,7 @@ class ProcessDocumentJob implements ShouldQueue
                     $ext = str_replace('image/', '', $block['mime']);
                     if ($ext === 'jpeg') $ext = 'jpg';
                     $fileName = 'modules/' . $document->module_id . '/images/doc_' . $document->id . '_img_' . $imageIndex . '.' . $ext;
-                    Storage::put($fileName, base64_decode($block['data']));
+                    Storage::disk('public')->put($fileName, base64_decode($block['data']));
                     
                     // Panggil Gemini Vision
                     $desc = $vision->describe($block['data'], $block['mime'], $currentSection);

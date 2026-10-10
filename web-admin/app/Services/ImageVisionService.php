@@ -36,7 +36,7 @@ class ImageVisionService
 
         $response = Http::withHeaders(['x-goog-api-key' => $apiKey])
             ->timeout(60)
-            ->post('https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent', [
+            ->post('https://generativelanguage.googleapis.com/v1beta/models/gemini-3.8-flash:generateContent', [
                 'contents' => [[
                     'parts' => [
                         ['text' => $prompt],
