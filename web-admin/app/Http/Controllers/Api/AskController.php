@@ -21,6 +21,21 @@ class AskController extends Controller
             'group_id' => ['nullable'],
         ]);
 
+        $qLower = strtolower(trim($data['question']));
+        $greetings = ['hai', 'halo', 'hello', 'p', 'ping', 'hi'];
+        if (in_array($qLower, $greetings)) {
+            $answer = "Halo! Saya CIKA, asisten AI internal untuk seluruh divisi di Disacloud. Ada yang bisa saya bantu terkait SOP, panduan, atau operasional hari ini?";
+            $log = $this->logChat($data, $data['question'], $answer, null, true);
+            return response()->json([
+                'question' => $data['question'],
+                'found' => true,
+                'answer' => $answer,
+                'sources' => [],
+                'image_urls' => [],
+                'chat_log_id' => $log?->id,
+            ]);
+        }
+
         try {
             $search = $rag->search($data['question'], $data['module_id'] ?? null);
         } catch (\Throwable $e) {
