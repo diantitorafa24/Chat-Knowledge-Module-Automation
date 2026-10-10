@@ -12,6 +12,10 @@ class Feedback extends Model
 
     protected $guarded = [];
 
+    protected $casts = [
+        'created_at' => 'datetime',
+    ];
+
     public function chatLog()
     {
         return $this->belongsTo(ChatLog::class);
