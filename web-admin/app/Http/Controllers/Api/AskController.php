@@ -16,9 +16,9 @@ class AskController extends Controller
         $data = $request->validate([
             'question' => ['required', 'string', 'min:2', 'max:' . (int) config('rag.max_question_length')],
             'module_id' => ['nullable', 'integer', 'exists:modules,id'],
-            'telegram_user_id' => ['nullable', 'integer'],
+            'telegram_user_id' => ['nullable'],
             'username' => ['nullable', 'string', 'max:100'],
-            'group_id' => ['nullable', 'integer'],
+            'group_id' => ['nullable'],
         ]);
 
         try {
@@ -31,14 +31,14 @@ class AskController extends Controller
 
         if (! $search['found']) {
             $answer = 'Maaf, informasi ini tidak ditemukan di modul yang tersedia.';
-
-            $this->logChat($data, $search['question'], $answer, null, false);
+            $log = $this->logChat($data, $search['question'], $answer, null, false);
 
             return response()->json([
                 'question' => $search['question'],
                 'found' => false,
                 'answer' => $answer,
                 'sources' => [],
+                'chat_log_id' => $log?->id,
             ]);
         }
 
@@ -51,7 +51,7 @@ class AskController extends Controller
         }
 
         $moduleId = $search['results'][0]['module_id'] ?? null;
-        $this->logChat($data, $search['question'], $answer, $moduleId, true);
+        $log = $this->logChat($data, $search['question'], $answer, $moduleId, true);
 
         return response()->json([
             'question' => $search['question'],
@@ -65,13 +65,14 @@ class AskController extends Controller
                 'subsection' => $r['subsection'],
                 'score' => $r['score'],
             ], $search['results']),
+            'chat_log_id' => $log?->id,
         ]);
     }
 
-    private function logChat(array $data, string $question, string $answer, ?int $moduleId, bool $isAnswered): void
+    private function logChat(array $data, string $question, string $answer, ?int $moduleId, bool $isAnswered): ?ChatLog
     {
         try {
-            ChatLog::create([
+            return ChatLog::create([
                 'telegram_user_id' => $data['telegram_user_id'] ?? null,
                 'username' => $data['username'] ?? null,
                 'group_id' => $data['group_id'] ?? null,
@@ -82,6 +83,8 @@ class AskController extends Controller
             ]);
         } catch (\Throwable $e) {
             Log::warning('Gagal menyimpan chat log', ['error' => $e->getMessage()]);
+
+            return null;
         }
     }
 }

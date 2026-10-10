@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Api\FeedbackController;
 use App\Http\Controllers\Api\ModuleApiController;
 use App\Http\Controllers\Api\RagController;
 use App\Http\Controllers\Api\AskController;
@@ -12,4 +13,5 @@ Route::middleware([ApiTokenAuth::class, 'throttle:60,1'])->group(function () {
     Route::get('/modules', [ModuleApiController::class, 'index']);
     Route::post('/rag/search', [RagController::class, 'search']);
     Route::post('/rag/ask', [AskController::class, 'ask']);
+    Route::post('/feedback', [FeedbackController::class, 'store']);
 });

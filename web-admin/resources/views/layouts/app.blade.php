@@ -36,7 +36,7 @@
         <div class="menu-title">Monitoring</div>
         <a href="{{ route('chat-logs.index') }}" class="sub {{ request()->routeIs('chat-logs.index') ? 'active' : '' }}">Chat Logs</a>
         <a href="{{ route('chat-logs.unanswered') }}" class="sub {{ request()->routeIs('chat-logs.unanswered') ? 'active' : '' }}">Unanswered Questions</a>
-        <a href="#" class="sub">Feedback</a>
+        <a href="{{ route('feedback.index') }}" class="sub {{ request()->routeIs('feedback.index') ? 'active' : '' }}">Feedback</a>
 
         <div class="menu-title">System</div>
         <a href="#" class="sub">Users</a>

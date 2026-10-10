@@ -6,6 +6,7 @@ use App\Http\Controllers\ChatLogController;
 use App\Http\Controllers\ChunkController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\DocumentController;
+use App\Http\Controllers\FeedbackListController;
 use App\Http\Controllers\ModuleController;
 use App\Http\Controllers\ModuleVersionController;
 use App\Http\Controllers\VersionListController;
@@ -33,5 +34,6 @@ Route::middleware('auth')->group(function () {
     Route::get('/chunks', [ChunkController::class, 'index'])->name('chunks.index');
     Route::get('/chat-logs', [ChatLogController::class, 'index'])->name('chat-logs.index');
     Route::get('/unanswered-questions', [ChatLogController::class, 'unanswered'])->name('chat-logs.unanswered');
+    Route::get('/feedback', [FeedbackListController::class, 'index'])->name('feedback.index');
     Route::post('/logout', [LoginController::class, 'logout'])->name('logout');
 });
