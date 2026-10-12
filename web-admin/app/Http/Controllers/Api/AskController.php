@@ -22,8 +22,11 @@ class AskController extends Controller
         ]);
 
         $qLower = strtolower(trim($data['question']));
-        $greetings = ['hai', 'halo', 'hello', 'p', 'ping', 'hi'];
-        if (in_array($qLower, $greetings)) {
+        // Bersihkan kata 'cika' dan tanda baca untuk deteksi sapaan
+        $cleanedGreeting = trim(preg_replace('/[^\w\s]/u', '', preg_replace('/\bcika\b/i', '', $qLower)));
+        $greetings = ['', 'hai', 'halo', 'hello', 'p', 'ping', 'hi', 'tes', 'test', 'pagi', 'siang', 'sore', 'malam', 'assalamualaikum'];
+
+        if (in_array($cleanedGreeting, $greetings)) {
             $answer = "Halo! Saya CIKA, asisten AI internal untuk seluruh divisi di Disacloud. Ada yang bisa saya bantu terkait SOP, panduan, atau operasional hari ini?";
             $log = $this->logChat($data, $data['question'], $answer, null, true);
             return response()->json([
@@ -36,8 +39,14 @@ class AskController extends Controller
             ]);
         }
 
+        // Untuk pencarian RAG, gunakan pertanyaan bersih tanpa kata panggil 'cika' agar embedding lebih tajam
+        $searchQuery = trim(preg_replace('/\bcika\b/i', '', $data['question']));
+        if ($searchQuery === '') {
+            $searchQuery = $data['question'];
+        }
+
         try {
-            $search = $rag->search($data['question'], $data['module_id'] ?? null);
+            $search = $rag->search($searchQuery, $data['module_id'] ?? null);
         } catch (\Throwable $e) {
             Log::error('Pencarian RAG gagal', ['error' => $e->getMessage()]);
 
