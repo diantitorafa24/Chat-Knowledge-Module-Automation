@@ -469,62 +469,247 @@
         .alert-success { background: #f0fdf4; color: #166534; border-left: 4px solid #22c55e; }
         .alert-danger  { background: #fef2f2; color: #991b1b; border-left: 4px solid #ef4444; }
 
-        /* ─── CARDS MODERN ELEVATED ─── */
+        /* ─── KARTU PUTIH MEWAH & ELEGAN DI SETIAP HALAMAN ─── */
         .card {
-            border: 1px solid rgba(226, 232, 240, 0.8) !important;
-            border-radius: 16px !important;
-            box-shadow: 0 1px 3px rgba(0,0,0,.04), 0 6px 18px rgba(0,0,0,.03) !important;
-            transition: all 0.25s ease;
+            border: 1px solid rgba(226, 232, 240, 0.9) !important;
+            border-radius: 20px !important;
+            box-shadow: 
+                0 4px 6px -1px rgba(15, 23, 42, 0.04), 
+                0 12px 28px -4px rgba(15, 23, 42, 0.06), 
+                inset 0 1px 0 rgba(255, 255, 255, 0.95) !important;
+            transition: all 0.28s cubic-bezier(0.16, 1, 0.3, 1);
             background: #ffffff;
+            position: relative;
+            overflow: hidden;
         }
+
         .card:hover { 
-            box-shadow: 0 4px 12px rgba(0,0,0,.06), 0 12px 28px rgba(0,0,0,.05) !important; 
+            transform: translateY(-3px);
+            border-color: rgba(148, 163, 184, 0.6) !important;
+            box-shadow: 
+                0 8px 16px -2px rgba(15, 23, 42, 0.06), 
+                0 20px 40px -6px rgba(15, 23, 42, 0.1),
+                inset 0 1px 0 #ffffff !important; 
         }
+
         .card-header {
-            background: #ffffff !important;
-            border-bottom: 1px solid #f1f5f9 !important;
-            border-radius: 16px 16px 0 0 !important;
-            padding: 16px 20px !important;
+            background: linear-gradient(180deg, #ffffff 0%, #f8fafc 100%) !important;
+            border-bottom: 1px solid #eef2f6 !important;
+            border-radius: 20px 20px 0 0 !important;
+            padding: 18px 24px !important;
             font-weight: 700;
+            font-size: 1rem;
             color: #0f172a;
+            display: flex;
+            align-items: center;
+            gap: 10px;
         }
 
-        /* ─── TABLES ─── */
-        .table { font-size: .875rem; }
-        .table > :not(caption) > * > * { padding: .75rem 1rem; }
-        .table-hover > tbody > tr:hover > * { background: #f8fafc; }
-        .table thead { background: #f8fafc; }
-        .table th { font-weight: 600; color: #64748b; text-transform: uppercase; font-size: .72rem; letter-spacing: .04em; }
+        /* Wadah Ikon Estetik di Header Kartu Putih */
+        .card-header i:first-child {
+            width: 34px;
+            height: 34px;
+            border-radius: 10px;
+            background: rgba(37, 99, 235, 0.08);
+            color: #2563eb;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.1rem;
+            border: 1px solid rgba(37, 99, 235, 0.15);
+            flex-shrink: 0;
+            transition: all 0.25s ease;
+        }
 
-        /* ─── BADGES ─── */
-        .badge { border-radius: 6px; font-weight: 600; font-size: .74rem; padding: 4px 9px; }
+        .card:hover .card-header i:first-child {
+            transform: scale(1.1) rotate(4deg);
+            background: rgba(37, 99, 235, 0.14);
+        }
 
-        /* ─── BUTTONS ─── */
-        .btn { border-radius: 10px; font-weight: 600; font-size: .875rem; transition: all 0.2s; }
+        .card-body {
+            padding: 24px !important;
+            color: #334155;
+        }
+
+        /* ─── TABEL MEWAH DI DALAM KARTU PUTIH ─── */
+        .table { 
+            font-size: .88rem; 
+            margin-bottom: 0;
+        }
+
+        .table > :not(caption) > * > * { 
+            padding: 1rem 1.25rem; 
+            vertical-align: middle;
+        }
+
+        .table-hover > tbody > tr {
+            transition: background 0.15s ease;
+        }
+
+        .table-hover > tbody > tr:hover > * { 
+            background: rgba(241, 245, 249, 0.75) !important; 
+        }
+
+        .table thead { 
+            background: #f8fafc; 
+        }
+
+        .table th { 
+            font-weight: 700; 
+            color: #64748b; 
+            text-transform: uppercase; 
+            font-size: .72rem; 
+            letter-spacing: .06em; 
+            border-bottom: 1.5px solid #e2e8f0;
+            padding: 14px 20px;
+        }
+
+        .table td {
+            border-bottom: 1px solid #f1f5f9;
+            padding: 14px 20px;
+        }
+
+        /* ─── BADGE MEWAH DI DALAM KARTU ─── */
+        .badge { 
+            border-radius: 8px; 
+            font-weight: 700; 
+            font-size: .74rem; 
+            padding: 5px 10px; 
+            letter-spacing: 0.02em;
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .badge.bg-primary, .badge.text-bg-primary { 
+            background: rgba(37, 99, 235, 0.12) !important; 
+            color: #1d4ed8 !important; 
+            border: 1px solid rgba(37, 99, 235, 0.25) !important; 
+        }
+
+        .badge.bg-success, .badge.text-bg-success { 
+            background: rgba(16, 185, 129, 0.12) !important; 
+            color: #047857 !important; 
+            border: 1px solid rgba(16, 185, 129, 0.25) !important; 
+        }
+
+        .badge.bg-warning, .badge.text-bg-warning { 
+            background: rgba(245, 158, 11, 0.12) !important; 
+            color: #b45309 !important; 
+            border: 1px solid rgba(245, 158, 11, 0.25) !important; 
+        }
+
+        .badge.bg-danger, .badge.text-bg-danger { 
+            background: rgba(239, 68, 68, 0.12) !important; 
+            color: #b91c1c !important; 
+            border: 1px solid rgba(239, 68, 68, 0.25) !important; 
+        }
+
+        .badge.bg-info, .badge.text-bg-info { 
+            background: rgba(6, 182, 212, 0.12) !important; 
+            color: #0e7490 !important; 
+            border: 1px solid rgba(6, 182, 212, 0.25) !important; 
+        }
+
+        .badge.bg-secondary, .badge.text-bg-secondary { 
+            background: #f1f5f9 !important; 
+            color: #475569 !important; 
+            border: 1px solid #e2e8f0 !important; 
+        }
+
+        /* ─── BUTTONS MEWAH DENGAN ELEVASI ─── */
+        .btn { 
+            border-radius: 10px; 
+            font-weight: 600; 
+            font-size: .875rem; 
+            padding: 8px 16px;
+            transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1); 
+        }
+
+        .btn:hover { 
+            transform: translateY(-1.5px); 
+        }
+
         .btn-primary { 
             background: linear-gradient(135deg, #2563eb, #4f46e5); 
             border: none; 
-            box-shadow: 0 4px 12px rgba(37, 99, 235, 0.25);
+            box-shadow: 0 4px 14px rgba(37, 99, 235, 0.25);
         }
+
         .btn-primary:hover { 
             background: linear-gradient(135deg, #1d4ed8, #4338ca); 
-            box-shadow: 0 6px 16px rgba(37, 99, 235, 0.4); 
-            transform: translateY(-1px);
+            box-shadow: 0 8px 20px rgba(37, 99, 235, 0.4); 
+            transform: translateY(-2px);
         }
-        .btn-sm { font-size: .8rem; padding: .4rem .85rem; }
 
-        /* ─── FORM ─── */
-        .form-control, .form-select {
-            border-radius: 10px;
-            border: 1.5px solid #e2e8f0;
-            font-size: .875rem;
-            transition: border-color .15s, box-shadow .15s;
+        .btn-sm { 
+            font-size: .8rem; 
+            padding: 5px 12px; 
+            border-radius: 8px; 
         }
+
+        .btn-outline-primary { 
+            border-color: #93c5fd; 
+            color: #2563eb; 
+        }
+        .btn-outline-primary:hover { 
+            background: #eff6ff; 
+            border-color: #2563eb; 
+            color: #1d4ed8; 
+        }
+
+        .btn-outline-secondary { 
+            border-color: #cbd5e1; 
+            color: #475569; 
+        }
+        .btn-outline-secondary:hover { 
+            background: #f8fafc; 
+            color: #1e293b; 
+            border-color: #94a3b8; 
+        }
+
+        .btn-outline-danger { 
+            border-color: #fca5a5; 
+            color: #dc2626; 
+        }
+        .btn-outline-danger:hover { 
+            background: #fef2f2; 
+            color: #b91c1c; 
+            border-color: #ef4444; 
+        }
+
+        .btn-outline-warning { 
+            border-color: #fcd34d; 
+            color: #d97706; 
+        }
+        .btn-outline-warning:hover { 
+            background: #fffbeb; 
+            color: #b45309; 
+            border-color: #f59e0b; 
+        }
+
+        /* ─── FORM CONTROLS DI DALAM KARTU ─── */
+        .form-control, .form-select {
+            border-radius: 12px;
+            border: 1.5px solid #e2e8f0;
+            font-size: .88rem;
+            padding: 9px 14px;
+            transition: all .15s ease;
+            background: #ffffff;
+        }
+
         .form-control:focus, .form-select:focus {
             border-color: #2563eb;
-            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.15);
+            box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.12);
+            background: #ffffff;
         }
-        .form-label { font-weight: 600; font-size: .85rem; color: #334155; }
+
+        .form-label { 
+            font-weight: 700; 
+            font-size: .85rem; 
+            color: #334155; 
+            margin-bottom: 6px;
+        }
 
         /* ─── SCROLLBAR ─── */
         .main-content::-webkit-scrollbar { width: 5px; }
