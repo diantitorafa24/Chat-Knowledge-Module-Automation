@@ -9,14 +9,23 @@ use Illuminate\Validation\Rule;
 
 class UserController extends Controller
 {
+    private function authorizeSuperadmin(): void
+    {
+        if (auth()->user()?->role !== 'superadmin') {
+            abort(403, 'Akses ditolak. Halaman ini hanya untuk Superadmin.');
+        }
+    }
+
     public function index()
     {
+        $this->authorizeSuperadmin();
         $users = User::all();
         return view('users.index', compact('users'));
     }
 
     public function store(Request $request)
     {
+        $this->authorizeSuperadmin();
         $data = $request->validate([
             'name' => 'required|string|max:255',
             'email' => 'required|string|email|max:255|unique:users',
@@ -36,6 +45,7 @@ class UserController extends Controller
 
     public function update(Request $request, User $user)
     {
+        $this->authorizeSuperadmin();
         $data = $request->validate([
             'name' => 'required|string|max:255',
             'email' => ['required', 'string', 'email', 'max:255', Rule::unique('users')->ignore($user->id)],
@@ -58,6 +68,7 @@ class UserController extends Controller
 
     public function destroy(User $user)
     {
+        $this->authorizeSuperadmin();
         if (User::count() <= 1) {
             return redirect()->route('users.index')->with('error', 'Tidak dapat menghapus satu-satunya pengguna di sistem.');
         }

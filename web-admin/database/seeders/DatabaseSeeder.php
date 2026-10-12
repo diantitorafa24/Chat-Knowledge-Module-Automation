@@ -13,7 +13,7 @@ class DatabaseSeeder extends Seeder
     {
         User::firstOrCreate(
             ['email' => 'admin@cika.test'],
-            ['name' => 'Admin CIKA', 'password' => Hash::make('admin12345')]
+            ['name' => 'Admin CIKA', 'password' => Hash::make('admin12345'), 'role' => 'superadmin']
         );
 
         $categories = [

@@ -7,14 +7,23 @@ use Illuminate\Http\Request;
 
 class SettingController extends Controller
 {
+    private function authorizeSuperadmin(): void
+    {
+        if (auth()->user()?->role !== 'superadmin') {
+            abort(403, 'Akses ditolak. Pengaturan sistem hanya dapat diakses oleh Superadmin.');
+        }
+    }
+
     public function index()
     {
+        $this->authorizeSuperadmin();
         $settings = Setting::all()->keyBy('key');
         return view('settings.index', compact('settings'));
     }
 
     public function update(Request $request)
     {
+        $this->authorizeSuperadmin();
         $data = $request->validate([
             'ai_system_prompt' => 'required|string',
             'ai_chat_model' => 'required|string|max:100',

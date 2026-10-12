@@ -267,6 +267,7 @@
             <i class="bi bi-hand-thumbs-up"></i> Feedback
         </a>
 
+        @if(auth()->check() && auth()->user()->role === 'superadmin')
         <div class="sidebar-section">System</div>
         <a href="{{ route('users.index') }}" class="sidebar-link {{ request()->routeIs('users.*') ? 'active' : '' }}">
             <i class="bi bi-people"></i> Users
@@ -274,6 +275,7 @@
         <a href="{{ route('settings.index') }}" class="sidebar-link {{ request()->routeIs('settings.*') ? 'active' : '' }}">
             <i class="bi bi-sliders"></i> Settings
         </a>
+        @endif
 
         <div class="sidebar-footer">
             <div class="sidebar-user">
