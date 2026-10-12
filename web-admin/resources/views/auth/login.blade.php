@@ -156,24 +156,32 @@
             text-align: center;
         }
 
-        /* KONTENER LOGO: Card putih melengkung persis seperti gambar yang dibuat pengguna */
+        /* KONTENER LOGO: Card badge dengan efek transparan pekat (dense frosted glassmorphism) */
         .cika-logo-badge {
             display: inline-flex;
             align-items: center;
             gap: 18px;
-            background: #ffffff;
+            background: rgba(255, 255, 255, 0.85);
+            backdrop-filter: blur(20px) saturate(160%);
+            -webkit-backdrop-filter: blur(20px) saturate(160%);
+            border: 1.5px solid rgba(255, 255, 255, 0.65);
             border-radius: 22px;
             padding: 14px 26px 14px 20px;
-            box-shadow: 0 16px 36px -8px rgba(0, 0, 0, 0.45), 0 0 0 1px rgba(255, 255, 255, 0.15);
+            box-shadow: 0 20px 40px -10px rgba(0, 0, 0, 0.4), 
+                        0 0 25px rgba(59, 130, 246, 0.15),
+                        inset 0 1px 0 rgba(255, 255, 255, 0.8);
             margin-bottom: 6px;
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            transition: transform 0.3s ease, box-shadow 0.3s ease, background 0.3s ease;
             cursor: default;
             user-select: none;
         }
 
         .cika-logo-badge:hover {
             transform: translateY(-3px) scale(1.02);
-            box-shadow: 0 22px 45px -8px rgba(0, 0, 0, 0.5), 0 0 25px rgba(59, 130, 246, 0.3);
+            background: rgba(255, 255, 255, 0.92);
+            box-shadow: 0 24px 50px -10px rgba(0, 0, 0, 0.45), 
+                        0 0 35px rgba(59, 130, 246, 0.25),
+                        inset 0 1px 0 rgba(255, 255, 255, 0.9);
         }
 
         /* 1. Animasi untuk LOGO (Ikon Gelembung di sebelah kiri) */
