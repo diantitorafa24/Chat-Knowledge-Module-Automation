@@ -7,12 +7,12 @@
     <link rel="icon" type="image/png" href="{{ asset('images/cika-icon.png') }}">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
     <style>
         :root {
-            --primary-blue: #3b82f6;
+            --primary-blue: #2563eb;
             --primary-indigo: #4f46e5;
-            --bg-dark: #0b0f19;
+            --bg-dark: #090d16;
             --card-radius: 24px;
         }
 
@@ -22,9 +22,9 @@
             font-family: 'Plus Jakarta Sans', sans-serif;
             background-color: var(--bg-dark);
             background-image: 
-                radial-gradient(at 0% 0%, rgba(59, 130, 246, 0.18) 0px, transparent 50%),
-                radial-gradient(at 100% 100%, rgba(79, 70, 229, 0.15) 0px, transparent 50%),
-                radial-gradient(at 50% 50%, rgba(15, 23, 42, 0.9) 0px, transparent 100%);
+                radial-gradient(at 0% 0%, rgba(37, 99, 235, 0.18) 0px, transparent 50%),
+                radial-gradient(at 100% 100%, rgba(79, 70, 229, 0.16) 0px, transparent 50%),
+                radial-gradient(at 50% 50%, rgba(15, 23, 42, 0.95) 0px, transparent 100%);
             min-height: 100vh;
             color: #f8fafc;
             display: flex;
@@ -33,7 +33,7 @@
             position: relative;
             overflow-x: hidden;
             margin: 0;
-            padding: 24px 16px;
+            padding: 32px 16px;
         }
 
         /* Ambient background glow particles */
@@ -41,7 +41,7 @@
             position: fixed;
             width: 600px;
             height: 600px;
-            background: radial-gradient(circle, rgba(59, 130, 246, 0.12) 0%, transparent 70%);
+            background: radial-gradient(circle, rgba(37, 99, 235, 0.14) 0%, transparent 70%);
             top: -150px;
             left: -150px;
             pointer-events: none;
@@ -50,9 +50,9 @@
 
         .ambient-glow-2 {
             position: fixed;
-            width: 500px;
-            height: 500px;
-            background: radial-gradient(circle, rgba(99, 102, 241, 0.1) 0%, transparent 70%);
+            width: 550px;
+            height: 550px;
+            background: radial-gradient(circle, rgba(99, 102, 241, 0.12) 0%, transparent 70%);
             bottom: -100px;
             right: -100px;
             pointer-events: none;
@@ -67,14 +67,14 @@
             margin: auto;
         }
 
-        /* ─── LEFT BRANDING SECTION ─── */
+        /* ─── SISI KIRI: BRANDING & KATA-KATA PENJELAS ─── */
         .badge-system {
             display: inline-flex;
             align-items: center;
             gap: 8px;
-            background: rgba(59, 130, 246, 0.12);
+            background: rgba(37, 99, 235, 0.12);
             color: #60a5fa;
-            border: 1px solid rgba(59, 130, 246, 0.25);
+            border: 1px solid rgba(59, 130, 246, 0.28);
             padding: 6px 14px;
             border-radius: 100px;
             font-size: 0.75rem;
@@ -96,7 +96,7 @@
 
         @keyframes pulseDot {
             0%, 100% { transform: scale(1); opacity: 1; }
-            50% { transform: scale(1.3); opacity: 0.6; }
+            50% { transform: scale(1.35); opacity: 0.55; }
         }
 
         .hero-title {
@@ -128,128 +128,143 @@
             align-items: center;
             gap: 12px;
             color: #cbd5e1;
-            font-size: 0.9rem;
+            font-size: 0.92rem;
             font-weight: 500;
             margin-bottom: 14px;
         }
 
         .feature-icon {
-            width: 28px;
-            height: 28px;
-            background: rgba(59, 130, 246, 0.15);
+            width: 30px;
+            height: 30px;
+            background: rgba(37, 99, 235, 0.15);
             border: 1px solid rgba(59, 130, 246, 0.3);
             border-radius: 8px;
             display: flex;
             align-items: center;
             justify-content: center;
             color: #60a5fa;
-            font-size: 0.85rem;
+            font-size: 0.9rem;
             flex-shrink: 0;
         }
 
-        /* ─── RIGHT SECTION (HEADER & LOGIN CARD) ─── */
+        /* ─── SISI KANAN: HEADER LOGO SESUAI GAMBAR ASLI ─── */
         .right-header {
             display: flex;
             flex-direction: column;
             align-items: center;
-            margin-bottom: 24px;
+            margin-bottom: 20px;
             text-align: center;
         }
 
-        .logo-box {
-            width: 76px;
-            height: 76px;
+        /* KONTENER LOGO: Card putih melengkung persis seperti gambar yang dibuat pengguna */
+        .cika-logo-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 18px;
             background: #ffffff;
-            border-radius: 20px;
+            border-radius: 22px;
+            padding: 14px 26px 14px 20px;
+            box-shadow: 0 16px 36px -8px rgba(0, 0, 0, 0.45), 0 0 0 1px rgba(255, 255, 255, 0.15);
+            margin-bottom: 6px;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            cursor: default;
+            user-select: none;
+        }
+
+        .cika-logo-badge:hover {
+            transform: translateY(-3px) scale(1.02);
+            box-shadow: 0 22px 45px -8px rgba(0, 0, 0, 0.5), 0 0 25px rgba(59, 130, 246, 0.3);
+        }
+
+        /* 1. Animasi untuk LOGO (Ikon Gelembung di sebelah kiri) */
+        .logo-bubble-anim {
+            width: 68px;
+            height: 68px;
+            flex-shrink: 0;
             display: flex;
             align-items: center;
             justify-content: center;
-            box-shadow: 0 12px 30px rgba(0, 0, 0, 0.35), 0 0 25px rgba(59, 130, 246, 0.25);
-            margin-bottom: 16px;
-            position: relative;
-            animation: floatLogo 4s ease-in-out infinite;
-            border: 1px solid rgba(255, 255, 255, 0.8);
-            transition: transform 0.3s ease;
+            animation: floatBubble 3.5s ease-in-out infinite;
         }
 
-        .logo-box:hover {
-            transform: scale(1.05) translateY(-4px);
-        }
-
-        .logo-box img {
-            width: 54px;
-            height: 54px;
+        .logo-bubble-anim img {
+            width: 100%;
+            height: 100%;
             object-fit: contain;
+            filter: drop-shadow(0 4px 8px rgba(37, 99, 235, 0.2));
         }
 
-        @keyframes floatLogo {
-            0%, 100% { transform: translateY(0px); }
-            50% { transform: translateY(-7px); }
+        @keyframes floatBubble {
+            0%, 100% {
+                transform: translateY(0px) rotate(0deg);
+            }
+            50% {
+                transform: translateY(-6px) rotate(-1.5deg);
+            }
         }
 
-        /* Animasi dan Typography CIKA samping/bawah logo */
-        .cika-brand-title {
-            font-size: 2rem;
-            font-weight: 800;
-            letter-spacing: -0.02em;
-            color: #ffffff;
+        /* 2. Animasi untuk KALIMAT SAMPING LOGO (Teks CIKA dan Subtitle di sebelah kanan) */
+        .logo-text-anim {
             display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 2px;
-            margin-bottom: 4px;
-            position: relative;
+            flex-direction: column;
+            align-items: flex-start;
+            text-align: left;
+            animation: shimmerText 3.5s ease-in-out infinite alternate;
         }
 
-        /* Efek Huruf CIKA: Transparan Blur dengan Outline Biru Modern */
-        .cika-letters {
-            background: linear-gradient(135deg, #3b82f6 0%, #60a5fa 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
+        @keyframes shimmerText {
+            0% {
+                filter: drop-shadow(0 0 0px rgba(37, 99, 235, 0));
+            }
+            100% {
+                filter: drop-shadow(0 2px 10px rgba(37, 99, 235, 0.35));
+            }
+        }
+
+        /* Tulisan CIKA: Biru Segar + Efek Transparan Blur di dalam huruf (bukan hitam) */
+        .cika-brand-name {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            font-size: 2.85rem;
             font-weight: 900;
-            letter-spacing: 0.05em;
+            line-height: 0.95;
+            letter-spacing: -0.01em;
+            color: #1d4ed8;
             position: relative;
             display: inline-block;
-            text-shadow: 0 0 20px rgba(59, 130, 246, 0.4);
-            animation: glowLetters 3s ease-in-out infinite alternate;
+            text-shadow: 0 2px 8px rgba(29, 78, 216, 0.25);
         }
 
-        /* Glassmorphism shadow / transparent blur di dalam huruf CIKA */
-        .cika-letters::after {
+        /* Lapisan transparan blur di dalam/belakang huruf CIKA menggantikan bayangan hitam */
+        .cika-brand-name::before {
             content: 'CIKA';
             position: absolute;
             left: 2px;
             top: 2px;
             z-index: -1;
-            color: rgba(255, 255, 255, 0.15);
-            -webkit-text-fill-color: rgba(255, 255, 255, 0.15);
+            color: rgba(37, 99, 235, 0.25);
+            -webkit-text-fill-color: rgba(37, 99, 235, 0.25);
             filter: blur(4px);
+            transform: scale(1.02);
         }
 
-        @keyframes glowLetters {
-            0% { filter: drop-shadow(0 0 8px rgba(59, 130, 246, 0.3)); }
-            100% { filter: drop-shadow(0 0 16px rgba(99, 102, 241, 0.6)); }
-        }
-
+        /* Subtitle: CHAT & KNOWLEDGE MODULE AUTOMATION */
         .cika-brand-sub {
-            color: #94a3b8;
-            font-size: 0.82rem;
-            font-weight: 500;
-            letter-spacing: 0.04em;
+            display: flex;
+            flex-direction: column;
+            font-size: 0.65rem;
+            font-weight: 700;
+            color: #334155;
+            letter-spacing: 0.16em;
+            line-height: 1.35;
+            margin-top: 6px;
             text-transform: uppercase;
-            animation: fadeInSub 1.2s ease forwards;
         }
 
-        @keyframes fadeInSub {
-            from { opacity: 0; transform: translateY(4px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-        /* ─── LOGIN CARD ─── */
+        /* ─── KARTU LOGIN PUTIH MODERN ─── */
         .auth-card {
             background: #ffffff;
             border-radius: var(--card-radius);
-            padding: 40px 38px;
+            padding: 38px 36px;
             box-shadow: 0 25px 60px -15px rgba(0, 0, 0, 0.5), 0 0 0 1px rgba(255, 255, 255, 0.1);
             color: #1e293b;
             position: relative;
@@ -322,12 +337,12 @@
 
         .form-control-custom:focus {
             outline: none;
-            border-color: #3b82f6;
-            box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.12);
+            border-color: #2563eb;
+            box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.12);
         }
 
         .input-icon-wrap:focus-within .icon-left {
-            color: #3b82f6;
+            color: #2563eb;
         }
 
         .btn-toggle-pwd {
@@ -365,14 +380,14 @@
         }
 
         .form-check-input:checked {
-            background-color: #3b82f6;
-            border-color: #3b82f6;
+            background-color: #2563eb;
+            border-color: #2563eb;
         }
 
         .btn-login-submit {
             width: 100%;
             height: 48px;
-            background: linear-gradient(135deg, #3b82f6 0%, #4f46e5 100%);
+            background: linear-gradient(135deg, #2563eb 0%, #4f46e5 100%);
             border: none;
             border-radius: 12px;
             color: #ffffff;
@@ -402,14 +417,14 @@
             color: #64748b;
             font-size: 0.78rem;
             text-align: center;
-            margin-top: 24px;
+            margin-top: 22px;
         }
 
         /* Responsive tweaks */
         @media (max-width: 991px) {
             .hero-section {
                 text-align: center;
-                margin-bottom: 40px;
+                margin-bottom: 36px;
             }
             .hero-desc {
                 margin-left: auto;
@@ -433,7 +448,7 @@
     <div class="login-wrapper">
         <div class="row align-items-center justify-content-between g-5">
             
-            {{-- ─── SISI KIRI: BRANDING & HEADLINE CERDAS (GAYA NISA) ─── --}}
+            {{-- ─── SISI KIRI: BRANDING & KATA-KATA PENJELAS TERPADU ─── --}}
             <div class="col-lg-6 hero-section">
                 <div class="badge-system">
                     <span class="pulse-dot"></span>
@@ -441,12 +456,12 @@
                 </div>
 
                 <h1 class="hero-title">
-                    Otomasi modul dan <br>
-                    <span class="gradient-text">pengetahuan cerdas.</span>
+                    Pusat Intelijensi &amp; <br>
+                    <span class="gradient-text">Pengetahuan Modul.</span>
                 </h1>
 
                 <p class="hero-desc">
-                    Dashboard CIKA membantu seluruh tim menemukan SOP instan, memahami panduan teknis, dan mengotomasi modul pengetahuan Disacloud secara akurat setiap hari.
+                    Dashboard CIKA membantu seluruh tim menemukan SOP instan, mempermudah troubleshooting teknis, dan mengotomasi modul pengetahuan Disacloud secara akurat setiap hari.
                 </p>
 
                 <div class="feature-list">
@@ -456,30 +471,38 @@
                     </div>
                     <div class="feature-item">
                         <div class="feature-icon"><i class="bi bi-search"></i></div>
-                        <span>Pencarian dokumen &amp; gambar instan via Qdrant Vector</span>
+                        <span>Pencarian SOP instan via Qdrant Vector Engine</span>
                     </div>
                     <div class="feature-item">
                         <div class="feature-icon"><i class="bi bi-robot"></i></div>
-                        <span>Asisten RAG cerdas terintegrasi Google Gemini AI</span>
+                        <span>Kecerdasan AI terpadu untuk seluruh divisi</span>
+                    </div>
+                    <div class="feature-item">
+                        <div class="feature-icon"><i class="bi bi-chat-dots"></i></div>
+                        <span>Integrasi bot Telegram &amp; evaluasi feedback realtime</span>
                     </div>
                 </div>
             </div>
 
-            {{-- ─── SISI KANAN: LOGO BERANIMASI & KARTU LOGIN ─── --}}
+            {{-- ─── SISI KANAN: LOGO SESUAI GAMBAR ASLI & FORM LOGIN ─── --}}
             <div class="col-lg-5 col-md-8 mx-auto">
                 
-                {{-- Header Logo & Title dengan Animasi --}}
+                {{-- Header: Logo Badge Lengkap persis seperti gambar pengguna --}}
                 <div class="right-header">
-                    <div class="logo-box">
-                        <img src="{{ asset('images/cika-icon.png') }}" alt="Logo CIKA">
-                    </div>
-                    
-                    <div class="cika-brand-title">
-                        <span class="cika-letters">CIKA</span>
-                        <span class="ms-2 fw-bold text-white">Assistant</span>
-                    </div>
-                    <div class="cika-brand-sub">
-                        Chat Intelligence &amp; Knowledge Assistant
+                    <div class="cika-logo-badge">
+                        {{-- Animasi Logo (Gelembung Tanya di Kiri) --}}
+                        <div class="logo-bubble-anim">
+                            <img src="{{ asset('images/cika-icon.png') }}" alt="Logo CIKA">
+                        </div>
+
+                        {{-- Animasi Kalimat Samping Logo (Teks CIKA + Subtitle di Kanan) --}}
+                        <div class="logo-text-anim">
+                            <div class="cika-brand-name">CIKA</div>
+                            <div class="cika-brand-sub">
+                                <span>CHAT &amp; KNOWLEDGE</span>
+                                <span>MODULE AUTOMATION</span>
+                            </div>
+                        </div>
                     </div>
                 </div>
 
@@ -506,7 +529,7 @@
                                 <i class="bi bi-envelope icon-left"></i>
                                 <input type="email" name="email" id="email" 
                                        class="form-control-custom @error('email') is-invalid @enderror" 
-                                       placeholder="nama@disacloud.net" 
+                                       placeholder="admin@cika.test" 
                                        value="{{ old('email') }}" required autofocus>
                             </div>
                         </div>
