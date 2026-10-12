@@ -174,11 +174,11 @@
         .sidebar-link:hover {
             background: var(--sidebar-hover);
             color: #f1f5f9;
-            transform: translateX(2px);
+            transform: translateX(3px);
         }
 
         .sidebar-link:hover i {
-            transform: scale(1.1);
+            transform: scale(1.12);
             color: #60a5fa;
         }
 
@@ -345,6 +345,27 @@
             transition: all 0.25s ease;
         }
 
+        /* PROGRESS LINE DI ATAS NAVBAR SAAT RENDER HALAMAN */
+        .top-loader {
+            position: absolute;
+            top: 0;
+            left: 0;
+            height: 3px;
+            width: 0%;
+            background: linear-gradient(90deg, #3b82f6, #6366f1, #a855f7);
+            box-shadow: 0 0 10px rgba(59, 130, 246, 0.8), 0 0 5px rgba(99, 102, 241, 0.6);
+            z-index: 100;
+            transition: width 0.3s ease, opacity 0.4s ease;
+            pointer-events: none;
+            animation: initialLoad 0.55s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
+        }
+
+        @keyframes initialLoad {
+            0% { width: 0%; opacity: 1; }
+            65% { width: 85%; opacity: 1; }
+            100% { width: 100%; opacity: 0; }
+        }
+
         /* TOMBOL TOGGLE MINIMIZE SIDEBAR */
         .btn-sidebar-toggle {
             width: 38px;
@@ -397,11 +418,50 @@
             box-shadow: 0 1px 2px rgba(0, 0, 0, 0.04);
         }
 
-        /* ─── CONTENT AREA ─── */
+        /* ─── EFEK ANIMASI PERPINDAHAN HALAMAN / RENDER KONTEN (FLUID STAGGERED REVEAL) ─── */
+        @keyframes pageReveal {
+            0% {
+                opacity: 0;
+                transform: translateY(18px) scale(0.995);
+                filter: blur(4px);
+            }
+            60% {
+                filter: blur(0);
+            }
+            100% {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+                filter: blur(0);
+            }
+        }
+
         .main-content { 
             flex: 1; 
             overflow-y: auto; 
             padding: 24px; 
+            animation: pageReveal 0.42s cubic-bezier(0.16, 1, 0.3, 1) both;
+        }
+
+        /* Staggered cascade reveal untuk elemen berurutan di dalam main content */
+        .main-content > .row:nth-child(1),
+        .main-content > .card:nth-child(1),
+        .main-content > .alert:nth-child(1) {
+            animation: pageReveal 0.4s cubic-bezier(0.16, 1, 0.3, 1) 0.04s both;
+        }
+
+        .main-content > .row:nth-child(2),
+        .main-content > .card:nth-child(2) {
+            animation: pageReveal 0.44s cubic-bezier(0.16, 1, 0.3, 1) 0.1s both;
+        }
+
+        .main-content > .row:nth-child(3),
+        .main-content > .card:nth-child(3) {
+            animation: pageReveal 0.46s cubic-bezier(0.16, 1, 0.3, 1) 0.16s both;
+        }
+
+        .main-content > .row:nth-child(4),
+        .main-content > .card:nth-child(4) {
+            animation: pageReveal 0.48s cubic-bezier(0.16, 1, 0.3, 1) 0.22s both;
         }
 
         /* ─── ALERTS ─── */
@@ -470,12 +530,6 @@
         .main-content::-webkit-scrollbar { width: 5px; }
         .main-content::-webkit-scrollbar-track { background: transparent; }
         .main-content::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 10px; }
-
-        @keyframes fadeInUp {
-            from { opacity: 0; transform: translateY(8px); }
-            to   { opacity: 1; transform: translateY(0); }
-        }
-        .main-content > * { animation: fadeInUp .2s ease; }
     </style>
     @stack('styles')
 </head>
@@ -586,6 +640,9 @@
     <div class="main-area">
         {{-- NAVBAR TRANSPARAN DENGAN BLUR KACA --}}
         <div class="topbar">
+            {{-- GLOWING TOP PAGE LOADER BAR --}}
+            <div class="top-loader" id="topPageLoader"></div>
+
             <button type="button" class="btn-sidebar-toggle" id="toggleSidebarBtn" title="Minimize / Expand Sidebar">
                 <i class="bi bi-text-indent-left" id="toggleSidebarIcon"></i>
             </button>
@@ -595,8 +652,8 @@
             </span>
         </div>
 
-        {{-- MAIN CONTENT --}}
-        <div class="main-content">
+        {{-- MAIN CONTENT DENGAN FLUID REVEAL ANIMATION --}}
+        <div class="main-content" id="mainContentArea">
             @if (session('success'))
                 <div class="alert alert-success d-flex align-items-center gap-2 mb-4">
                     <i class="bi bi-check-circle-fill"></i> {{ session('success') }}
@@ -646,6 +703,21 @@
             }
         });
     }
+
+    // Feedback visual transisi loading saat mengklik menu sidebar
+    document.querySelectorAll('.sidebar-link').forEach(link => {
+        link.addEventListener('click', function(e) {
+            const href = this.getAttribute('href');
+            if (href && !href.startsWith('#') && !this.classList.contains('active')) {
+                const loader = document.getElementById('topPageLoader');
+                if (loader) {
+                    loader.style.animation = 'none';
+                    loader.style.opacity = '1';
+                    loader.style.width = '75%';
+                }
+            }
+        });
+    });
 </script>
 @stack('scripts')
 </body>
