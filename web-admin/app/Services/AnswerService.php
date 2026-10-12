@@ -9,19 +9,23 @@ use RuntimeException;
 class AnswerService
 {
     private const SYSTEM_PROMPT = <<<'TEXT'
-        Kamu adalah CIKA, asisten AI internal terpadu untuk seluruh divisi dan karyawan di Disacloud (bukan hanya NOC).
-        Konteks di bawah ini SUDAH DIPASTIKAN relevan dengan pertanyaan oleh sistem pencarian.
-        Tugasmu merangkum dan menjawab langsung berdasarkan konteks tersebut, dengan bahasa yang jelas dan actionable.
-        JANGAN pernah bilang "informasi tidak ditemukan" atau semacamnya - konteks yang diberikan pasti relevan.
-        Jangan mengarang atau menambah informasi dari luar konteks.
-        Jawab dalam Bahasa Indonesia yang profesional namun ramah.
+        Kamu adalah CIKA (Chat Intelligence & Knowledge Assistant), asisten AI internal resmi untuk seluruh divisi di Disacloud.
+        Tugas utamamu adalah memberikan jawaban yang SANGAT CERMAT, AKURAT, LENGKAP, dan BERKUALITAS TINGGI berdasarkan modul yang disediakan.
 
-        ATURAN FORMAT (WAJIB DIIKUTI):
-        - Gunakan teks biasa saja. DILARANG menggunakan simbol Markdown seperti **, *, _, `, #, ~, >, [, ].
-        - Untuk judul langkah, tulis langsung seperti: "1. Langkah Pertama"
-        - Untuk sub-poin, gunakan tanda strip: "- item"
-        - Untuk penekanan, gunakan HURUF KAPITAL seperlunya, bukan tanda bintang.
-        - Di akhir jawaban, sebutkan sumber: (Sumber: nama modul, bagian).
+        PRINSIP KECERMATAN & AKURASI JAWABAN:
+        1. Jawab langsung ke inti pertanyaan dengan runtut, jelas, dan sistematis.
+        2. CERMAT TERHADAP DATA TEKNIS: Jika pertanyaan berkaitan dengan daftar IP address, port, nama site, kredensial (username/password), perintah CLI/script, atau tabel konfigurasi, sebutkan secara LENGKAP dan DETAIL satu per satu sesuai konteks tanpa ada yang disingkat atau dihilangkan.
+        3. Pahami modul secara mendalam: jika suatu prosedur memiliki prasyarat (seperti VPN harus konek dulu), urutan langkah, catatan peringatan, atau perbedaan khusus per site/perangkat, jelaskan secara terstruktur.
+        4. Jangan mengarang informasi di luar konteks modul yang diberikan.
+        5. Gunakan Bahasa Indonesia yang profesional, ramah, dan jelas.
+
+        ATURAN FORMAT TELEGRAM (WAJIB DIIKUTI AGAR TIDAK ERROR):
+        - Gunakan teks biasa saja yang rapi dan mudah dibaca di layar HP.
+        - DILARANG menggunakan simbol Markdown formatting seperti **, *, _, `, #, ~, >, [, ].
+        - Gunakan penomoran jelas untuk langkah (contoh: "1. Langkah Pertama").
+        - Gunakan strip untuk daftar rincian (contoh: "- 172.31.0.10:61928 untuk Disa (R. RB)").
+        - Gunakan HURUF KAPITAL seperlunya untuk penekanan (contoh: "CATATAN PENTING:").
+        - Di baris paling akhir, cantumkan sumber: (Sumber: nama modul, bab/bagian).
         TEXT;
 
     public function answer(string $question, string $context): string
@@ -36,17 +40,17 @@ class AnswerService
         $url = 'https://generativelanguage.googleapis.com/v1beta/models/' . $model . ':generateContent';
 
         $systemPrompt = \App\Models\Setting::get('ai_system_prompt', self::SYSTEM_PROMPT);
-        $prompt = $systemPrompt . "\n\nKonteks:\n" . $context . "\n\nPertanyaan: " . $question;
+        $prompt = $systemPrompt . "\n\nKonteks Modul:\n" . $context . "\n\nPertanyaan: " . $question;
 
         $response = null;
 
         for ($attempt = 1; $attempt <= 3; $attempt++) {
             try {
                 $response = Http::withHeaders(['x-goog-api-key' => $key])
-                    ->timeout(30)
+                    ->timeout(45)
                     ->post($url, [
                         'contents' => [['parts' => [['text' => $prompt]]]],
-                        'generationConfig' => ['temperature' => 0.2, 'maxOutputTokens' => 500],
+                        'generationConfig' => ['temperature' => 0.2, 'maxOutputTokens' => 2048],
                     ]);
             } catch (ConnectionException $e) {
                 if ($attempt === 3) {

@@ -9,7 +9,7 @@ $response = curl_exec($ch);
 curl_close($ch);
 
 $wf = json_decode($response, true);
-$newUrl = "https://accessing-raleigh-suite-cst.trycloudflare.com";
+$newUrl = "https://kansas-cfr-incentive-booking.trycloudflare.com";
 
 foreach ($wf['nodes'] as &$node) {
     if ($node['name'] === 'Tanya CIKA') {
@@ -29,7 +29,7 @@ $payload = [
 $ch = curl_init($url);
 curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
 curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "PUT");
-curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($payload));
+curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($payload, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES));
 curl_setopt($ch, CURLOPT_HTTPHEADER, [
     'X-N8n-Api-Key: ' . $apiKey,
     'Content-Type: application/json'
