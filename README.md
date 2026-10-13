@@ -161,3 +161,5 @@ Kalau `chat_log_id` dari `callback_data` kosong, sistem mencoba fallback mengamb
 - File kredensial (lihat "Lokasi Penting" di atas) berisi semua token/API key — jangan pernah di-screenshot, commit, atau tempel ke chat/dokumen mana pun.
 - `.env` di `web-admin/` juga tidak boleh commit (sudah di `.gitignore`) — dan sekarang WAJIB dicek tidak bisa diakses via browser karena project ada di dalam htdocs (lihat peringatan keamanan di bagian "Lokasi Penting").
 - Database `cika` di MySQL lokal berisi data uji (modul MOD-001, 3 dokumen uji, beberapa chat log) — aman dihapus/reset kalau development selanjutnya butuh data bersih.
+#   C h a t - K n o w l e d g e - M o d u l e - A u t o m a t i o n  
+ 
