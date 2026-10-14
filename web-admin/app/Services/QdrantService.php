@@ -128,14 +128,20 @@ class QdrantService
     }
 
     /**
-     * Filter untuk pencarian: hanya chunk aktif, opsional dibatasi ke satu modul.
+     * Filter untuk pencarian: hanya chunk aktif, opsional dibatasi ke satu modul atau daftar modul.
      */
-    public static function activeFilter(?int $moduleId = null): array
+    public static function activeFilter(?int $moduleId = null, ?array $moduleIds = null): array
     {
         $must = [['key' => 'is_active', 'match' => ['value' => true]]];
 
         if ($moduleId !== null) {
             $must[] = ['key' => 'module_id', 'match' => ['value' => $moduleId]];
+        } elseif ($moduleIds !== null && ! empty($moduleIds)) {
+            if (count($moduleIds) === 1) {
+                $must[] = ['key' => 'module_id', 'match' => ['value' => (int) reset($moduleIds)]];
+            } else {
+                $must[] = ['key' => 'module_id', 'match' => ['any' => array_values(array_map('intval', $moduleIds))]];
+            }
         }
 
         return ['must' => $must];

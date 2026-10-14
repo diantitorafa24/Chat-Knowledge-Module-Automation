@@ -101,7 +101,25 @@ class DocumentUploadService
         }
 
         ProcessDocumentJob::dispatch($document->id)->afterCommit();
+        self::triggerQueueWorker();
 
         return $document;
+    }
+
+    public static function triggerQueueWorker(): void
+    {
+        // Di server (Docker) sudah ada container queue worker khusus.
+        // Memicu worker tambahan dari request web hanya dibutuhkan di laptop/XAMPP.
+        if (app()->environment('production')) {
+            return;
+        }
+
+        try {
+            $process = new \Symfony\Component\Process\Process(['php', base_path('artisan'), 'queue:work', '--stop-when-empty']);
+            $process->setTimeout(null);
+            $process->start();
+        } catch (\Throwable $e) {
+            \Illuminate\Support\Facades\Log::warning('Gagal memicu queue worker di background: ' . $e->getMessage());
+        }
     }
 }

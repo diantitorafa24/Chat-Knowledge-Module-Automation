@@ -31,6 +31,10 @@ class DocumentController extends Controller
             ->latest()
             ->get();
 
+        if (\Illuminate\Support\Facades\DB::table('jobs')->exists() || $documents->contains(fn ($d) => in_array($d->processing_status, ['uploaded', 'extracting', 'processing_images', 'chunking', 'embedding']))) {
+            DocumentUploadService::triggerQueueWorker();
+        }
+
         return view('documents.processing', compact('documents'));
     }
 
@@ -63,6 +67,7 @@ class DocumentController extends Controller
 
         $document->update(['processing_status' => 'uploaded', 'progress' => 0, 'processing_error' => null]);
         ProcessDocumentJob::dispatch($document->id);
+        DocumentUploadService::triggerQueueWorker();
 
         return back()->with('success', 'Dokumen dimasukkan ke antrean pemrosesan.');
     }

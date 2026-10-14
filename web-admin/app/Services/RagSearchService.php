@@ -16,14 +16,27 @@ class RagSearchService
     /**
      * Cari chunk terbaik dari versi aktif untuk sebuah pertanyaan.
      */
-    public function search(string $question, ?int $moduleId = null, ?int $limit = null): array
+    public function search(string $question, ?int $moduleId = null, ?int $limit = null, ?array $moduleIds = null): array
     {
         $question = trim($question);
         $limit = max(1, min($limit ?? \App\Models\Setting::get('rag_max_results', 3), 10));
         $minScore = (float) \App\Models\Setting::get('rag_min_score', 0.60);
 
+        if ($moduleIds !== null && empty($moduleIds)) {
+            return [
+                'question' => $question,
+                'found' => false,
+                'min_score' => $minScore,
+                'top_score' => null,
+                'results' => [],
+                'image_urls' => [],
+                'context' => '',
+            ];
+        }
+
         $vector = $this->embeddings->embedQuery($question);
-        $hits = $this->qdrant->search($vector, $limit, QdrantService::activeFilter($moduleId));
+        $filter = QdrantService::activeFilter($moduleId, $moduleIds);
+        $hits = $this->qdrant->search($vector, $limit, $filter);
 
         $chunkIds = collect($hits)
             ->map(fn ($hit) => (int) ($hit['payload']['chunk_id'] ?? $hit['id']))
