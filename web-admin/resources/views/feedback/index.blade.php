@@ -13,7 +13,7 @@
     </div>
     <div class="col-md-4">
         <div class="card shadow-sm"><div class="card-body">
-            <div class="text-muted small">Positif (??)</div>
+            <div class="text-muted small">Positif (👍)</div>
             <div class="fs-2 fw-bold text-success">{{ $positif }}</div>
         </div></div>
     </div>
@@ -45,9 +45,9 @@
                     <td>{{ $fb->chatLog->module->code ?? '-' }}</td>
                     <td>
                         @if ($fb->rating === 1)
-                            <span class="badge text-bg-success">?? Positif</span>
+                            <span class="badge text-bg-success">👍 Positif</span>
                         @else
-                            <span class="badge text-bg-danger">?? Negatif</span>
+                            <span class="badge text-bg-danger">👎 Negatif</span>
                         @endif
                     </td>
                     <td>{{ $fb->comment ?? '-' }}</td>

@@ -4,7 +4,7 @@
 @section('heading', 'All Modules')
 
 @section('content')
-<div class="d-flex justify-content-between align-items-center mb-3">
+<div class="d-flex justify-content-between align-items-center mb-3 page-actions">
     <form method="GET" action="{{ route('modules.index') }}">
         <select name="category" class="form-select" onchange="this.form.submit()">
             <option value="">Semua kategori</option>

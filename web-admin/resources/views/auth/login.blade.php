@@ -446,6 +446,30 @@
                 font-size: 2.2rem;
             }
         }
+
+        /* HP: form login langsung terlihat, branding diringkas */
+        @media (max-width: 767.98px) {
+            body { padding: 20px 14px; align-items: flex-start; min-height: 100dvh; }
+            .login-wrapper .row { --bs-gutter-x: 1rem; --bs-gutter-y: 1.25rem; }
+            body { overflow-x: hidden; }
+            .hero-section { order: 2; margin-bottom: 0; }
+            .badge-system { font-size: .62rem; padding: 5px 12px; margin-bottom: 14px; }
+            .hero-title { font-size: 1.55rem; margin-bottom: 10px; }
+            .hero-title br { display: none; }
+            .hero-desc { font-size: .88rem; margin-bottom: 0; }
+            .feature-list { display: none; }
+
+            .right-header { margin-bottom: 14px; }
+            .cika-logo-badge { gap: 12px; padding: 10px 18px 10px 14px; border-radius: 18px; }
+            .logo-bubble-anim { width: 48px; height: 48px; }
+            .cika-brand-name { font-size: 2rem; }
+            .cika-brand-sub { font-size: .55rem; letter-spacing: .12em; }
+
+            .auth-card { padding: 26px 20px; border-radius: 20px; }
+            .auth-card .card-heading { font-size: 1.25rem; }
+            .form-control-custom { font-size: 16px; } /* cegah auto-zoom iOS */
+            .ambient-glow-1, .ambient-glow-2 { width: 320px; height: 320px; }
+        }
     </style>
 </head>
 <body>

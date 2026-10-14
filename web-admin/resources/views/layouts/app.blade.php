@@ -715,6 +715,176 @@
         .main-content::-webkit-scrollbar { width: 5px; }
         .main-content::-webkit-scrollbar-track { background: transparent; }
         .main-content::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 10px; }
+
+        /* Header kartu & baris aksi boleh turun baris kalau sempit */
+        .card-header { flex-wrap: wrap; }
+        .sidebar-backdrop { display: none; }
+
+        /* ═══════════════════════════════════════════════════════
+           RESPONSIF — TABLET & HP (< 992px)
+           Sidebar jadi menu geser (off-canvas) dari kiri.
+           ═══════════════════════════════════════════════════════ */
+        @media (max-width: 991.98px) {
+            .app-wrapper { height: 100dvh; }
+
+            .sidebar {
+                position: fixed;
+                top: 0;
+                left: 0;
+                height: 100dvh;
+                width: 280px !important;
+                max-width: 85vw;
+                transform: translateX(-100%);
+                transition: transform 0.28s cubic-bezier(0.4, 0, 0.2, 1);
+                z-index: 1040;
+                box-shadow: 0 0 40px rgba(0, 0, 0, 0.35);
+            }
+            body.sidebar-open .sidebar { transform: translateX(0); }
+
+            /* Mode "collapsed" desktop tidak berlaku di HP */
+            .sidebar.collapsed .brand-details,
+            .sidebar.collapsed .link-text,
+            .sidebar.collapsed .user-details,
+            .sidebar.collapsed .logout-text { display: flex !important; }
+            .sidebar.collapsed .link-text, .sidebar.collapsed .logout-text { display: inline !important; }
+            .sidebar.collapsed .sidebar-brand { justify-content: flex-start; padding: 16px 18px; }
+            .sidebar.collapsed .sidebar-section {
+                height: auto; padding: 16px 20px 6px; margin: 0;
+                background: none; text-indent: 0;
+            }
+            .sidebar.collapsed .sidebar-link { justify-content: flex-start; padding: 10px 16px; margin: 2px 12px; }
+            .sidebar.collapsed .sidebar-user {
+                justify-content: flex-start; padding: 8px 10px;
+                background: rgba(255, 255, 255, 0.04); border: 1px solid rgba(255, 255, 255, 0.06);
+            }
+
+            .sidebar-link { padding: 12px 16px; }      /* target sentuh lebih besar */
+            .sidebar-link:hover { transform: none; }
+
+            .sidebar-backdrop {
+                display: block;
+                position: fixed;
+                inset: 0;
+                background: rgba(9, 14, 26, 0.55);
+                backdrop-filter: blur(2px);
+                opacity: 0;
+                pointer-events: none;
+                transition: opacity 0.25s ease;
+                z-index: 1035;
+            }
+            body.sidebar-open .sidebar-backdrop { opacity: 1; pointer-events: auto; }
+
+            .topbar { padding: 0 16px; gap: 12px; }
+            .topbar-title {
+                white-space: nowrap;
+                overflow: hidden;
+                text-overflow: ellipsis;
+                min-width: 0;
+            }
+            .main-content { padding: 18px 16px 28px; }
+        }
+
+        /* ═══════════════════════════════════════════════════════
+           RESPONSIF — HP (< 768px)
+           ═══════════════════════════════════════════════════════ */
+        @media (max-width: 767.98px) {
+            :root { --topbar-height: 58px; }
+
+            .topbar-title { font-size: 1rem; }
+            .topbar-badge { padding: 5px 8px; }
+            .topbar-badge .badge-text { display: none; }
+
+            .main-content { padding: 14px 12px 24px; }
+
+            .card { border-radius: 16px !important; }
+            .card-header {
+                padding: 14px 16px !important;
+                font-size: .95rem;
+                border-radius: 16px 16px 0 0 !important;
+            }
+            .card-header h5 { font-size: 1rem; }
+            .card-body { padding: 16px !important; }
+            .card-body.p-0 { padding: 0 !important; }
+
+            /* Efek hover melayang tidak berguna di layar sentuh */
+            .card:hover, .btn:hover, .btn-primary:hover { transform: none; }
+
+            /* Form: 16px mencegah iOS auto-zoom saat input difokuskan */
+            .form-control, .form-select { font-size: 16px; }
+
+            /* Baris filter/aksi di atas tabel: susun ke bawah */
+            .page-actions { flex-direction: column; align-items: stretch !important; gap: 10px; }
+            .page-actions > * { width: 100%; }
+
+            /* ── Tabel → kartu bertumpuk ──
+               Label kolom diambil otomatis dari <th> lewat JS (data-label).
+               Tambahkan class "no-stack" di <table> kalau ingin tetap geser horizontal. */
+            .main-content table.table:not(.no-stack) thead { display: none; }
+            .main-content table.table:not(.no-stack),
+            .main-content table.table:not(.no-stack) tbody,
+            .main-content table.table:not(.no-stack) tr,
+            .main-content table.table:not(.no-stack) td { display: block; width: 100%; }
+            .main-content table.table:not(.no-stack) tr {
+                padding: 12px 16px;
+                border-bottom: 1px solid #eef2f6;
+            }
+            .main-content table.table:not(.no-stack) tbody tr:last-child { border-bottom: none; }
+            .main-content table.table:not(.no-stack) > :not(caption) > * > td {
+                display: flex;
+                justify-content: space-between;
+                align-items: flex-start;
+                gap: 12px;
+                padding: 6px 0 !important;
+                border: none;
+                text-align: right !important;
+                max-width: none !important;
+                min-width: 0 !important;
+                word-break: break-word;
+            }
+            .main-content table.table:not(.no-stack) td::before {
+                content: attr(data-label);
+                flex: 0 0 38%;
+                text-align: left;
+                font-size: .7rem;
+                font-weight: 700;
+                text-transform: uppercase;
+                letter-spacing: .05em;
+                color: #64748b;
+                padding-top: 2px;
+            }
+            .main-content table.table:not(.no-stack) td:not([data-label])::before,
+            .main-content table.table:not(.no-stack) td[data-label=""]::before { display: none; }
+            /* Kolom isi panjang (details/pre) dan sel kosong: lebar penuh, rata kiri */
+            .main-content table.table:not(.no-stack) td.td-block,
+            .main-content table.table:not(.no-stack) td[colspan] {
+                display: block;
+                text-align: left !important;
+            }
+            .main-content table.table:not(.no-stack) td.td-block::before {
+                display: block;
+                margin-bottom: 4px;
+            }
+            .main-content table.table:not(.no-stack) td[colspan]::before { display: none; }
+            /* Tombol aksi: rata kanan, boleh turun baris */
+            .main-content table.table:not(.no-stack) td.td-actions {
+                flex-wrap: wrap;
+                justify-content: flex-end;
+                gap: 6px;
+                padding-top: 10px !important;
+            }
+            .main-content table.table:not(.no-stack) td.td-actions::before { display: none; }
+            .main-content table.table:not(.no-stack) td > .td-val { flex: 1; min-width: 0; }
+            .main-content table.table:not(.no-stack) td.td-block > .td-val { text-align: left; }
+            .main-content table.table:not(.no-stack) td .progress { width: 100%; }
+            .table-hover > tbody > tr:hover > * { background: transparent !important; }
+
+            /* Pagination Laravel: muat di layar sempit */
+            .pagination { flex-wrap: wrap; gap: 4px; }
+            nav[role="navigation"] p.small { font-size: .78rem; }
+
+            /* Modal hampir layar penuh */
+            .modal-dialog { margin: 12px; }
+        }
     </style>
     @stack('styles')
 </head>
@@ -821,6 +991,9 @@
         </div>
     </nav>
 
+    {{-- Latar gelap di belakang menu saat terbuka di HP (tap untuk menutup) --}}
+    <div class="sidebar-backdrop" id="sidebarBackdrop"></div>
+
     {{-- ─── MAIN AREA ─── --}}
     <div class="main-area">
         {{-- NAVBAR TRANSPARAN DENGAN BLUR KACA --}}
@@ -833,7 +1006,7 @@
             </button>
             <div class="topbar-title">@yield('title', 'Dashboard')</div>
             <span class="topbar-badge">
-                <i class="bi bi-circle-fill text-success" style="font-size:.5rem;"></i> Online
+                <i class="bi bi-circle-fill text-success" style="font-size:.5rem;"></i> <span class="badge-text">Online</span>
             </span>
         </div>
 
@@ -856,43 +1029,91 @@
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 <script>
-    // Fitur Minimize / Expand Sidebar dengan Memory LocalStorage
+    // Sidebar: di desktop = minimize/expand (disimpan), di HP/tablet = menu geser buka/tutup
     const sidebar = document.getElementById('mainSidebar');
     const toggleBtn = document.getElementById('toggleSidebarBtn');
     const toggleIcon = document.getElementById('toggleSidebarIcon');
+    const backdrop = document.getElementById('sidebarBackdrop');
+    const mobileQuery = window.matchMedia('(max-width: 991.98px)');
 
-    // Cek preferensi tersimpan
-    const isCollapsed = localStorage.getItem('cika_sidebar_collapsed') === 'true';
-    if (isCollapsed && sidebar) {
-        sidebar.classList.add('collapsed');
-        if (toggleIcon) {
-            toggleIcon.classList.remove('bi-text-indent-left');
-            toggleIcon.classList.add('bi-text-indent-right');
+    const store = {
+        get(k) { try { return localStorage.getItem(k); } catch (e) { return null; } },
+        set(k, v) { try { localStorage.setItem(k, v); } catch (e) {} },
+    };
+
+    function setIcon(name) {
+        if (!toggleIcon) return;
+        toggleIcon.className = 'bi ' + name;
+    }
+
+    function syncIcon() {
+        if (mobileQuery.matches) {
+            setIcon(document.body.classList.contains('sidebar-open') ? 'bi-x-lg' : 'bi-list');
+        } else {
+            setIcon(sidebar.classList.contains('collapsed') ? 'bi-text-indent-right' : 'bi-text-indent-left');
         }
+    }
+
+    function openMobileMenu() {
+        document.body.classList.add('sidebar-open');
+        syncIcon();
+    }
+
+    function closeMobileMenu() {
+        document.body.classList.remove('sidebar-open');
+        syncIcon();
+    }
+
+    if (sidebar && store.get('cika_sidebar_collapsed') === 'true') {
+        sidebar.classList.add('collapsed');
     }
 
     if (toggleBtn && sidebar) {
         toggleBtn.addEventListener('click', function () {
-            sidebar.classList.toggle('collapsed');
-            const nowCollapsed = sidebar.classList.contains('collapsed');
-            localStorage.setItem('cika_sidebar_collapsed', nowCollapsed);
-
-            if (toggleIcon) {
-                if (nowCollapsed) {
-                    toggleIcon.classList.remove('bi-text-indent-left');
-                    toggleIcon.classList.add('bi-text-indent-right');
-                } else {
-                    toggleIcon.classList.remove('bi-text-indent-right');
-                    toggleIcon.classList.add('bi-text-indent-left');
-                }
+            if (mobileQuery.matches) {
+                document.body.classList.contains('sidebar-open') ? closeMobileMenu() : openMobileMenu();
+                return;
             }
+            sidebar.classList.toggle('collapsed');
+            store.set('cika_sidebar_collapsed', sidebar.classList.contains('collapsed'));
+            syncIcon();
         });
     }
+
+    if (backdrop) backdrop.addEventListener('click', closeMobileMenu);
+    document.addEventListener('keydown', e => { if (e.key === 'Escape') closeMobileMenu(); });
+    mobileQuery.addEventListener('change', () => { closeMobileMenu(); syncIcon(); });
+    syncIcon();
+
+    // Tabel → kartu di HP: isi label tiap sel dari judul kolom (<th>)
+    document.querySelectorAll('.main-content table.table').forEach(table => {
+        const headers = Array.from(table.querySelectorAll('thead th')).map(th => th.textContent.trim());
+        if (!headers.length) return;
+        table.querySelectorAll('tbody tr').forEach(tr => {
+            Array.from(tr.children).forEach((td, i) => {
+                if (td.hasAttribute('colspan')) return;
+                if (!td.hasAttribute('data-label')) td.setAttribute('data-label', headers[i] || '');
+                const label = (headers[i] || '').toLowerCase();
+                if (label === 'aksi' || td.classList.contains('text-end') && td.querySelector('.btn, form')) {
+                    td.classList.add('td-actions');
+                }
+                if (td.querySelector('details, pre')) td.classList.add('td-block');
+                // Bungkus isi sel supaya teks + <br> tetap bertumpuk rapi di sisi kanan
+                if (!td.classList.contains('td-actions') && !td.querySelector(':scope > .td-val')) {
+                    const wrap = document.createElement('div');
+                    wrap.className = 'td-val';
+                    while (td.firstChild) wrap.appendChild(td.firstChild);
+                    td.appendChild(wrap);
+                }
+            });
+        });
+    });
 
     // Feedback visual transisi loading saat mengklik menu sidebar
     document.querySelectorAll('.sidebar-link').forEach(link => {
         link.addEventListener('click', function(e) {
             const href = this.getAttribute('href');
+            if (mobileQuery.matches) closeMobileMenu();
             if (href && !href.startsWith('#') && !this.classList.contains('active')) {
                 const loader = document.getElementById('topPageLoader');
                 if (loader) {

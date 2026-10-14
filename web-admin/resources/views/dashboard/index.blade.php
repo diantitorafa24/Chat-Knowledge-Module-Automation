@@ -220,12 +220,31 @@
         letter-spacing: -0.02em;
     }
     .section-title {
-        font-size: .74rem; 
-        text-transform: uppercase; 
+        font-size: .74rem;
+        text-transform: uppercase;
         letter-spacing: .09em;
-        color: #64748b; 
-        font-weight: 700; 
+        color: #64748b;
+        font-weight: 700;
         margin-bottom: 8px;
+    }
+
+    .chart-box { position: relative; height: 300px; }
+
+    @media (max-width: 767.98px) {
+        .stat-card { padding: 16px 14px; border-radius: 16px !important; }
+        .stat-card:hover { transform: none; }
+        .stat-card .stat-value { font-size: 1.9rem; }
+        .stat-card .stat-label { font-size: .74rem; margin-top: 6px; padding-right: 30px; }
+        .stat-card .stat-icon-wrap { width: 34px; height: 34px; font-size: 1.05rem; right: 10px; top: 10px; border-radius: 10px; }
+        .stat-card .stat-watermark { font-size: 4rem; }
+        .stat-card .stat-pill { font-size: .6rem; padding: 2px 8px; margin-top: 10px; max-width: 100%; }
+        .stat-card .stat-pill span:last-child { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        .health-wrap { gap: 14px !important; }
+        .health-wrap > div { width: 100%; }
+        .health-pill { width: 100%; border-radius: 14px; font-size: .8rem; padding: 8px 14px; }
+        .health-pill span:last-child { word-break: break-word; }
+        .chart-box { height: 240px; }
+        .rate-ring { font-size: 2.3rem; }
     }
 </style>
 @endpush
@@ -275,7 +294,7 @@
         <i class="bi bi-activity text-primary fs-5"></i>
         <span>Status Layanan Inti</span>
     </div>
-    <div class="card-body d-flex flex-wrap gap-4 py-3">
+    <div class="card-body d-flex flex-wrap gap-4 py-3 health-wrap">
         <div>
             <div class="section-title">Qdrant Vector Database</div>
             <span class="health-pill {{ $health['qdrant']['ok'] ? 'health-ok' : 'health-fail' }}">
@@ -302,7 +321,7 @@
                 <span>Tren Pertanyaan 7 Hari Terakhir</span>
             </div>
             <div class="card-body">
-                <canvas id="trendChart" height="95"></canvas>
+                <div class="chart-box"><canvas id="trendChart"></canvas></div>
             </div>
         </div>
     </div>
@@ -395,7 +414,8 @@ new Chart(document.getElementById('trendChart'), {
     },
     options: {
         responsive: true,
-        plugins: { legend: { position: 'top' } },
+        maintainAspectRatio: false,
+        plugins: { legend: { position: 'top', labels: { boxWidth: 12, font: { size: window.innerWidth < 768 ? 11 : 12 } } } },
         scales: {
             y: { beginAtZero: true, ticks: { precision: 0 } }
         }
